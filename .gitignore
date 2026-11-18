@@ -1,0 +1,20 @@
+# Godot 4 cache & temporary artifacts
+.godot/
+*.translation
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Local debug / save artifacts
+mcp_interaction_server*
+save_data.json
+if_survive_save.json
+
+# Export outputs
+build/
+dist/
+export/

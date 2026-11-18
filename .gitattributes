@@ -1,0 +1,12 @@
+* text=auto eol=lf
+
+*.gd text diff=python
+*.tscn text
+*.godot text
+*.json text
+*.md text
+
+*.png binary
+*.jpg binary
+*.ogg binary
+*.ttf binary

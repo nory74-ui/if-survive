@@ -1,0 +1,48 @@
+{
+  "series_title": "IF : SURVIVE",
+  "series_subtitle": "戦国・幕末異聞",
+  "emblem": "res://common_assets/emblem_kamon.png",
+  "series_logo": "res://common_assets/logo_series.png",
+  "episodes": [
+    {
+      "id": "01_nobunaga",
+      "era": "戦国篇・壱",
+      "year": "天正十年（一五八二年）",
+      "title": "本能寺・残照録",
+      "subtitle": "〜天正十年、その先の覇王〜",
+      "seal": "本能残照",
+      "logo": "assets/title_logo.png",
+      "protagonist": "織田信長",
+      "summary": "炎上する本能寺の地下道から生還した第六天魔王。自らの「死」を利用し、野心を覗かせる秀吉や家臣たちの本音を見極める。",
+      "accent_color": "#9E1B1B",
+      "dir": "res://episodes/01_nobunaga",
+      "available": true
+    },
+    {
+      "id": "02_ryoma",
+      "era": "幕末篇・弐",
+      "year": "慶応三年（一八六七年）",
+      "title": "近江屋・残照録",
+      "subtitle": "〜慶応三年、その先の海援〜",
+      "seal": "近江残照",
+      "protagonist": "坂本龍馬",
+      "summary": "京・近江屋の凶刃を紙一重で生き延びた風雲児。薩長藩閥による新政府の専横を止め、真の海援国家を創り上げられるか。",
+      "accent_color": "#2E6B7E",
+      "dir": "res://episodes/02_ryoma",
+      "available": false
+    },
+    {
+      "id": "03_yoshitsune",
+      "era": "源平篇・参",
+      "year": "文治五年（一一八九年）",
+      "title": "衣川・残照録",
+      "subtitle": "〜文治五年、その先の戦神〜",
+      "seal": "衣川残照",
+      "protagonist": "源義経",
+      "summary": "奥州平泉の包囲網を突破した悲劇の天才武将。兄・頼朝の鎌倉幕府へ反旗を翻すか、北の海を越えて未知の大陸へ渡るか。",
+      "accent_color": "#5B4B8A",
+      "dir": "res://episodes/03_yoshitsune",
+      "available": false
+    }
+  ]
+}

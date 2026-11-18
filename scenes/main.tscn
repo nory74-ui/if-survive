@@ -1,0 +1,756 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/particles.gd" id="2_particles"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="ShakeRoot" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BaseVoidBg" type="ColorRect" parent="ShakeRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0431373, 0.0431373, 0.054902, 1)
+
+[node name="GameScreen" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundLayer" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FallbackBgHost" type="Control" parent="ShakeRoot/GameScreen/BackgroundLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BgTextureRect" type="TextureRect" parent="ShakeRoot/GameScreen/BackgroundLayer"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BgWatermark" type="Label" parent="ShakeRoot/GameScreen/BackgroundLayer"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -540.0
+offset_top = 108.0
+offset_right = -36.0
+offset_bottom = 144.0
+grow_horizontal = 0
+text = "[BG: placeholder]"
+horizontal_alignment = 2
+
+[node name="BgFadeRect" type="ColorRect" parent="ShakeRoot/GameScreen/BackgroundLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0431373, 0.0431373, 0.054902, 0)
+
+[node name="CharacterLayer" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LeftSlot" type="Control" parent="ShakeRoot/GameScreen/CharacterLayer"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 144.0
+offset_top = 129.0
+offset_right = 840.0
+offset_bottom = 786.0
+mouse_filter = 2
+
+[node name="RightSlot" type="Control" parent="ShakeRoot/GameScreen/CharacterLayer"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 1080.0
+offset_top = 129.0
+offset_right = 1776.0
+offset_bottom = 786.0
+mouse_filter = 2
+
+[node name="AtmosphereParticles" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_particles")
+
+[node name="ChapterBanner" type="Control" parent="ShakeRoot/GameScreen"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BannerPanel" type="PanelContainer" parent="ShakeRoot/GameScreen/ChapterBanner"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -255.0
+offset_right = 390.0
+offset_bottom = -156.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BannerLabel" type="Label" parent="ShakeRoot/GameScreen/ChapterBanner/BannerPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClickAdvanceLayer" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MessageWindow" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -354.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="TopFadeRect" type="TextureRect" parent="ShakeRoot/GameScreen/MessageWindow"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 54.0
+grow_horizontal = 2
+mouse_filter = 2
+expand_mode = 1
+
+[node name="BodyRect" type="ColorRect" parent="ShakeRoot/GameScreen/MessageWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 54.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.0941176, 0.0941176, 0.121569, 0.9)
+
+[node name="ContentMargin" type="MarginContainer" parent="ShakeRoot/GameScreen/MessageWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 138
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 138
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 11
+
+[node name="SpeakerRow" type="HBoxContainer" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 15
+
+[node name="SpeakerAccent" type="ColorRect" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox/SpeakerRow"]
+custom_minimum_size = Vector2(6, 33)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.619608, 0.105882, 0.105882, 1)
+
+[node name="SpeakerLabel" type="Label" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox/SpeakerRow"]
+layout_mode = 2
+text = "織田信長"
+
+[node name="GoldDivider" type="ColorRect" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.784314, 0.658824, 0.419608, 1)
+
+[node name="TextArea" type="HBoxContainer" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="BodyText" type="RichTextLabel" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox/TextArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = false
+scroll_active = false
+
+[node name="NextIndicator" type="Label" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox/TextArea"]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+size_flags_vertical = 8
+text = "◆"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="TopHUD" type="Control" parent="ShakeRoot/GameScreen"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 129.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="LocationPanel" type="PanelContainer" parent="ShakeRoot/GameScreen/TopHUD"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 0
+offset_left = 36.0
+offset_top = 27.0
+offset_right = 516.0
+offset_bottom = 117.0
+mouse_filter = 2
+
+[node name="LocMargin" type="MarginContainer" parent="ShakeRoot/GameScreen/TopHUD/LocationPanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 0
+
+[node name="LocVBox" type="VBoxContainer" parent="ShakeRoot/GameScreen/TopHUD/LocationPanel/LocMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="ChapterLabel" type="Label" parent="ShakeRoot/GameScreen/TopHUD/LocationPanel/LocMargin/LocVBox"]
+layout_mode = 2
+text = "序章・一　暁の銃声"
+
+[node name="LocationLabel" type="Label" parent="ShakeRoot/GameScreen/TopHUD/LocationPanel/LocMargin/LocVBox"]
+layout_mode = 2
+text = "天正十年 六月二日 暁 ― 本能寺・奥座敷"
+
+[node name="HudButtons" type="HBoxContainer" parent="ShakeRoot/GameScreen/TopHUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -675.0
+offset_top = 27.0
+offset_right = -36.0
+offset_bottom = 96.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_constants/separation = 15
+alignment = 2
+
+[node name="BacklogButton" type="Button" parent="ShakeRoot/GameScreen/TopHUD/HudButtons"]
+layout_mode = 2
+focus_mode = 0
+text = "履歴"
+
+[node name="AutoButton" type="Button" parent="ShakeRoot/GameScreen/TopHUD/HudButtons"]
+layout_mode = 2
+focus_mode = 0
+text = "自動送り"
+
+[node name="TitleReturnButton" type="Button" parent="ShakeRoot/GameScreen/TopHUD/HudButtons"]
+layout_mode = 2
+focus_mode = 0
+text = "タイトルへ"
+
+[node name="TitleScreen" type="Control" parent="ShakeRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleBgHost" type="Control" parent="ShakeRoot/TitleScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TitleParticles" type="Control" parent="ShakeRoot/TitleScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_particles")
+
+[node name="PreludeTag" type="Label" parent="ShakeRoot/TitleScreen"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 126.0
+offset_right = 840.0
+offset_bottom = 180.0
+theme_override_colors/font_color = Color(0.784314, 0.658824, 0.419608, 0.88)
+theme_override_font_sizes/font_size = 27
+text = "天正十年 六月二日 黎明 ― 織田信長 生存異聞"
+
+[node name="TitleArtHost" type="Control" parent="ShakeRoot/TitleScreen"]
+layout_mode = 0
+offset_left = 1230.0
+offset_top = 72.0
+offset_right = 1815.0
+offset_bottom = 990.0
+mouse_filter = 2
+
+[node name="MenuBox" type="VBoxContainer" parent="ShakeRoot/TitleScreen"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 657.0
+offset_right = 750.0
+offset_bottom = 882.0
+theme_override_constants/separation = 27
+
+[node name="StartButton" type="Button" parent="ShakeRoot/TitleScreen/MenuBox"]
+custom_minimum_size = Vector2(570, 84)
+layout_mode = 2
+text = "初陣（はじめから）"
+
+[node name="GalleryButton" type="Button" parent="ShakeRoot/TitleScreen/MenuBox"]
+custom_minimum_size = Vector2(570, 78)
+layout_mode = 2
+text = "終幕録（エンディング一覧 0/4）"
+
+[node name="VersionLabel" type="Label" parent="ShakeRoot/TitleScreen"]
+layout_mode = 0
+offset_left = 1560.0
+offset_top = 984.0
+offset_right = 1842.0
+offset_bottom = 1023.0
+text = "Ver 1.0.0"
+horizontal_alignment = 2
+
+[node name="ControlsHint" type="Label" parent="ShakeRoot/TitleScreen"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 984.0
+offset_right = 1380.0
+offset_bottom = 1023.0
+theme_override_colors/font_color = Color(0.658824, 0.635294, 0.588235, 0.78)
+theme_override_font_sizes/font_size = 21
+text = "操作：クリック / Space / Enter 進行　[H] 履歴　[A] 自動送り　[M / 右クリック] UI非表示　[Esc] 戻る"
+
+[node name="ChoiceOverlay" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BlurBackdrop" type="ColorRect" parent="ShakeRoot/ChoiceOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0431373, 0.0431373, 0.054902, 0.72)
+
+[node name="ChoiceCenter" type="CenterContainer" parent="ShakeRoot/ChoiceOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChoicePanel" type="PanelContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter"]
+custom_minimum_size = Vector2(1260, 0)
+layout_mode = 2
+
+[node name="ChoiceMargin" type="MarginContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="ChoiceVBox" type="VBoxContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ChoicePromptLabel" type="Label" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin/ChoiceVBox"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ChoiceGoldLine" type="ColorRect" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin/ChoiceVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.784314, 0.658824, 0.419608, 0.75)
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin/ChoiceVBox"]
+layout_mode = 2
+theme_override_constants/separation = 21
+
+[node name="BacklogOverlay" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BacklogDim" type="ColorRect" parent="ShakeRoot/BacklogOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0431373, 0.0431373, 0.054902, 0.78)
+
+[node name="BacklogCenter" type="CenterContainer" parent="ShakeRoot/BacklogOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BacklogPanel" type="PanelContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter"]
+custom_minimum_size = Vector2(1380, 840)
+layout_mode = 2
+
+[node name="BacklogMargin" type="MarginContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel"]
+layout_mode = 2
+
+[node name="BacklogVBox" type="VBoxContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin"]
+layout_mode = 2
+theme_override_constants/separation = 21
+
+[node name="BacklogHeader" type="HBoxContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox"]
+layout_mode = 2
+
+[node name="BacklogTitle" type="Label" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox/BacklogHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.784314, 0.658824, 0.419608, 1)
+theme_override_font_sizes/font_size = 36
+text = "履歴 ― これまでの記録"
+
+[node name="BacklogCloseButton" type="Button" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox/BacklogHeader"]
+layout_mode = 2
+text = "閉じる"
+
+[node name="BacklogSep" type="ColorRect" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.784314, 0.658824, 0.419608, 0.65)
+
+[node name="BacklogScroll" type="ScrollContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BacklogList" type="VBoxContainer" parent="ShakeRoot/BacklogOverlay/BacklogCenter/BacklogPanel/BacklogMargin/BacklogVBox/BacklogScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 21
+
+[node name="EndingCardOverlay" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EndingDim" type="ColorRect" parent="ShakeRoot/EndingCardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0313726, 0.027451, 0.0352941, 0.88)
+
+[node name="EndingCenter" type="CenterContainer" parent="ShakeRoot/EndingCardOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EndingCardPanel" type="PanelContainer" parent="ShakeRoot/EndingCardOverlay/EndingCenter"]
+custom_minimum_size = Vector2(1170, 585)
+layout_mode = 2
+
+[node name="EndingMargin" type="MarginContainer" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel"]
+layout_mode = 2
+
+[node name="EndingVBox" type="VBoxContainer" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin"]
+layout_mode = 2
+theme_override_constants/separation = 27
+alignment = 1
+
+[node name="EndingNumberLabel" type="Label" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+layout_mode = 2
+text = "終幕・第壱"
+horizontal_alignment = 1
+
+[node name="EndingTopLine" type="ColorRect" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+custom_minimum_size = Vector2(540, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+color = Color(0.784314, 0.658824, 0.419608, 0.8)
+
+[node name="EndingTitleLabel" type="Label" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+layout_mode = 2
+text = "鉄血の第六天魔王"
+horizontal_alignment = 1
+
+[node name="EndingSubLabel" type="Label" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="EndingSpacer" type="Control" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+custom_minimum_size = Vector2(0, 21)
+layout_mode = 2
+
+[node name="EndingActions" type="HBoxContainer" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="EndingGalleryBtn" type="Button" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox/EndingActions"]
+custom_minimum_size = Vector2(300, 72)
+layout_mode = 2
+text = "終幕録を見る"
+
+[node name="EndingTitleBtn" type="Button" parent="ShakeRoot/EndingCardOverlay/EndingCenter/EndingCardPanel/EndingMargin/EndingVBox/EndingActions"]
+custom_minimum_size = Vector2(300, 72)
+layout_mode = 2
+text = "タイトルへ戻る"
+
+[node name="EndingGalleryOverlay" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GalleryDim" type="ColorRect" parent="ShakeRoot/EndingGalleryOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0352941, 0.0352941, 0.0431373, 0.88)
+
+[node name="GalleryCenter" type="CenterContainer" parent="ShakeRoot/EndingGalleryOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GalleryPanel" type="PanelContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter"]
+custom_minimum_size = Vector2(1560, 915)
+layout_mode = 2
+
+[node name="GalleryMargin" type="MarginContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel"]
+layout_mode = 2
+
+[node name="GalleryVBox" type="VBoxContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="GalleryHeader" type="HBoxContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox"]
+layout_mode = 2
+
+[node name="GalleryTitle" type="Label" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox/GalleryHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.784314, 0.658824, 0.419608, 1)
+theme_override_font_sizes/font_size = 39
+text = "終幕録 ― 天正十年、その先の帰結"
+
+[node name="GalleryCountLabel" type="Label" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox/GalleryHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.937255, 0.913725, 1)
+theme_override_font_sizes/font_size = 27
+text = "達成状況： 0 / 4"
+
+[node name="GallerySep" type="ColorRect" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.784314, 0.658824, 0.419608, 0.65)
+
+[node name="GalleryGrid" type="GridContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 30
+columns = 2
+
+[node name="GalleryFooter" type="HBoxContainer" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="GalleryCloseBtn" type="Button" parent="ShakeRoot/EndingGalleryOverlay/GalleryCenter/GalleryPanel/GalleryMargin/GalleryVBox/GalleryFooter"]
+custom_minimum_size = Vector2(300, 66)
+layout_mode = 2
+text = "閉じる"
+
+[node name="ConfirmTitleOverlay" type="Control" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ConfirmDim" type="ColorRect" parent="ShakeRoot/ConfirmTitleOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0313726, 0.0313726, 0.0392157, 0.72)
+
+[node name="ConfirmCenter" type="CenterContainer" parent="ShakeRoot/ConfirmTitleOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ConfirmPanel" type="PanelContainer" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter"]
+custom_minimum_size = Vector2(780, 315)
+layout_mode = 2
+
+[node name="ConfirmMargin" type="MarginContainer" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel"]
+layout_mode = 2
+
+[node name="ConfirmVBox" type="VBoxContainer" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="ConfirmLabel" type="Label" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
+layout_mode = 2
+text = "本編を中断してタイトル画面へ戻りますか？"
+horizontal_alignment = 1
+
+[node name="ConfirmButtons" type="HBoxContainer" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox"]
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="ConfirmYesBtn" type="Button" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox/ConfirmButtons"]
+custom_minimum_size = Vector2(270, 66)
+layout_mode = 2
+text = "タイトルへ戻る"
+
+[node name="ConfirmNoBtn" type="Button" parent="ShakeRoot/ConfirmTitleOverlay/ConfirmCenter/ConfirmPanel/ConfirmMargin/ConfirmVBox/ConfirmButtons"]
+custom_minimum_size = Vector2(240, 66)
+layout_mode = 2
+text = "物語を続ける"
+
+[node name="FlashOverlay" type="ColorRect" parent="ShakeRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
+[node name="BgmPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="SePlayers" type="Node" parent="."]
