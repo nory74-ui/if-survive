@@ -2,6 +2,11 @@
 
 和風モダンな歴史 IF ビジュアルノベルシリーズ『**IF : SURVIVE 戦国・幕末異聞**』のマルチタイトル共通エンジン（Godot 4.6 / GDScript / `1920x1080`）および第1弾『**本能寺・残照録 〜天正十年、その先の覇王〜**』のリポジトリです。
 
+## ブラウザで遊ぶ（Web版）
+
+- **公開URL**: https://nory74-ui.github.io/if-survive/
+- `main` ブランチへのプッシュをトリガーに、GitHub Actions（[deploy-pages.yml](.github/workflows/deploy-pages.yml)）で Godot Web（HTML5 / WebGL2・シングルスレッド）ビルドを自動生成し、GitHub Pages へデプロイします。
+
 ---
 
 ## 収録タイトル

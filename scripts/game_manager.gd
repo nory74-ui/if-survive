@@ -81,10 +81,21 @@ func load_texture_safe(full_path: String) -> Texture2D:
 		if res is Texture2D:
 			return res as Texture2D
 	if FileAccess.file_exists(full_path):
-		var abs_path := ProjectSettings.globalize_path(full_path)
-		var img := Image.load_from_file(abs_path)
-		if img != null and not img.is_empty():
-			return ImageTexture.create_from_image(img)
+		var bytes := FileAccess.get_file_as_bytes(full_path)
+		if not bytes.is_empty():
+			var img := Image.new()
+			var low := full_path.to_lower()
+			if low.ends_with(".webp") and img.load_webp_from_buffer(bytes) == OK:
+				return ImageTexture.create_from_image(img)
+			if (low.ends_with(".jpg") or low.ends_with(".jpeg")) and img.load_jpg_from_buffer(bytes) == OK:
+				return ImageTexture.create_from_image(img)
+			if img.load_png_from_buffer(bytes) == OK:
+				return ImageTexture.create_from_image(img)
+		if OS.get_name() != "Web":
+			var abs_path := ProjectSettings.globalize_path(full_path)
+			var img_disk := Image.load_from_file(abs_path)
+			if img_disk != null and not img_disk.is_empty():
+				return ImageTexture.create_from_image(img_disk)
 	return null
 
 

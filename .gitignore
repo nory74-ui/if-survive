@@ -1,5 +1,6 @@
 # Godot 4 cache & temporary artifacts
 .godot/
+*.import
 *.translation
 
 # OS / Editor files

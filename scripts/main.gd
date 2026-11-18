@@ -85,6 +85,7 @@ var _banner_tween: Tween = null
 var _transition_tween: Tween = null
 var _bgm_tween: Tween = null
 var _audio_cache: Dictionary = {}
+var _synth_wav_cache: Dictionary = {}
 
 # --- フォント・テーマ ---
 var _main_font: Font = null
@@ -240,12 +241,14 @@ func _setup_font_and_theme() -> void:
 	])
 
 	var loaded_font: Font = null
+	var use_sys_fallback := (OS.get_name() != "Web")
 	for fp in [FONT_PATH, LEGACY_FONT_PATH]:
 		if ResourceLoader.exists(fp):
 			var res := ResourceLoader.load(fp)
 			if res is FontFile:
 				var ff := res as FontFile
-				ff.fallbacks = [sys_font]
+				if use_sys_fallback:
+					ff.fallbacks = [sys_font]
 				loaded_font = ff
 				break
 		elif FileAccess.file_exists(fp):
@@ -253,7 +256,8 @@ func _setup_font_and_theme() -> void:
 			var bytes := FileAccess.get_file_as_bytes(fp)
 			if not bytes.is_empty():
 				ff.data = bytes
-				ff.fallbacks = [sys_font]
+				if use_sys_fallback:
+					ff.fallbacks = [sys_font]
 				loaded_font = ff
 				break
 
@@ -716,7 +720,7 @@ func _setup_qol_ui() -> void:
 
 	var msg_vbox := $ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox as VBoxContainer
 	_shortcut_hint = Label.new()
-	_shortcut_hint.text = "Click/Space: 進む　｜　H/上ホイール: 履歴　｜　A: 自動　｜　S/Ctrl: スキップ　｜　Q: 急速記録　｜　M/右クリック: 枠消去"
+	_shortcut_hint.text = "Click/Space: 進む　|　H/上ホイール: 履歴　|　A: 自動　|　S/Ctrl: スキップ　|　Q: 急速記録　|　M/右クリック: 枠消去"
 	_shortcut_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_shortcut_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_shortcut_hint.add_theme_color_override("font_color", Color(COLOR_MUTED.r, COLOR_MUTED.g, COLOR_MUTED.b, 0.56))
@@ -1244,7 +1248,7 @@ func _setup_portal_ui() -> void:
 	var footer_hint := Label.new()
 	footer_hint.position = Vector2(160, 986)
 	footer_hint.size = Vector2(1600, 36)
-	footer_hint.text = "操作：作品カードから「この時代を紐解く」を選択　｜　[Esc] メインタイトルへ戻る"
+	footer_hint.text = "操作：作品カードから「この時代を紐解く」を選択　|　[Esc] メインタイトルへ戻る"
 	footer_hint.add_theme_color_override("font_color", Color(COLOR_MUTED.r, COLOR_MUTED.g, COLOR_MUTED.b, 0.78))
 	footer_hint.add_theme_font_size_override("font_size", 20)
 	_portal_screen.add_child(footer_hint)
@@ -1326,7 +1330,7 @@ func _refresh_portal_cards() -> void:
 		if first_play_btn == null and card_res.get("play_btn", null) != null:
 			first_play_btn = card_res["play_btn"] as Button
 
-	_portal_stats_lbl.text = "収録 %d/%d 篇公開中　｜　シリーズ累計終幕：%d" % [available_cnt, episodes.size(), total_unlocked]
+	_portal_stats_lbl.text = "収録 %d/%d 篇公開中　|　シリーズ累計終幕：%d" % [available_cnt, episodes.size(), total_unlocked]
 	if first_play_btn != null:
 		_focus_control(first_play_btn)
 	elif _portal_back_btn != null:
@@ -1374,7 +1378,7 @@ func _create_portal_episode_card(ep: Dictionary) -> Dictionary:
 
 	var status_lbl := Label.new()
 	if avail:
-		status_lbl.text = "終幕 %d / 4　｜　既読章 %d" % [unlocked_cnt, visited_cnt]
+		status_lbl.text = "終幕 %d / 4　|　既読章 %d" % [unlocked_cnt, visited_cnt]
 		status_lbl.add_theme_color_override("font_color", COLOR_PAPER if unlocked_cnt > 0 else COLOR_MUTED)
 	else:
 		status_lbl.text = "【準備中】"
@@ -1956,7 +1960,7 @@ func _get_char_step_multiplier(just_revealed: String, next_ch: String) -> float:
 		if next_ch == "…":
 			return 1.5
 		return 2.5
-	if just_revealed == "―" or just_revealed == "─":
+	if just_revealed == "―":
 		if next_ch == just_revealed:
 			return 1.0
 		return 2.4
@@ -2695,7 +2699,7 @@ func _open_backlog() -> void:
 			if not chap_key.is_empty() and chap_key != last_chap_key:
 				last_chap_key = chap_key
 				var ch_lbl := Label.new()
-				ch_lbl.text = "── %s ──" % chap_key
+				ch_lbl.text = "―― %s ――" % chap_key
 				ch_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				ch_lbl.add_theme_color_override("font_color", Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.78))
 				ch_lbl.add_theme_font_size_override("font_size", 23)
@@ -3201,7 +3205,7 @@ func _create_series_gallery_row(ep: Dictionary) -> PanelContainer:
 		var replay_scene := str(ed.get("scene_id", ""))
 		if is_unlocked and not replay_scene.is_empty():
 			var rbtn := Button.new()
-			rbtn.text = "▶ 第%s幕「%s」を再鑑賞" % [ed_num, ed_title]
+			rbtn.text = "◆ 第%s幕「%s」を再鑑賞" % [ed_num, ed_title]
 			rbtn.custom_minimum_size = Vector2(0, 48)
 			rbtn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			rbtn.add_theme_font_size_override("font_size", 20)
@@ -3287,7 +3291,7 @@ func _create_ending_card_item(ed: Dictionary, unlocked: bool) -> PanelContainer:
 		var replay_scene := str(ed.get("scene_id", ""))
 		if not replay_scene.is_empty() and _scenes.has(replay_scene):
 			var replay_btn := Button.new()
-			replay_btn.text = "▶ 再鑑賞"
+			replay_btn.text = "◆ 再鑑賞"
 			replay_btn.custom_minimum_size = Vector2(150, 46)
 			replay_btn.add_theme_font_size_override("font_size", 21)
 			replay_btn.pressed.connect(func() -> void:
@@ -3461,10 +3465,16 @@ func _load_audio_safe(
 			if res is AudioStream:
 				stream = res as AudioStream
 		elif candidate.ends_with(".ogg") and FileAccess.file_exists(candidate):
-			var abs_path := ProjectSettings.globalize_path(candidate)
-			var ogg := AudioStreamOggVorbis.load_from_file(abs_path)
-			if ogg != null:
-				stream = ogg
+			var bytes := FileAccess.get_file_as_bytes(candidate)
+			if not bytes.is_empty():
+				var ogg_buf := AudioStreamOggVorbis.load_from_buffer(bytes)
+				if ogg_buf != null:
+					stream = ogg_buf
+			if stream == null and OS.get_name() != "Web":
+				var abs_path := ProjectSettings.globalize_path(candidate)
+				var ogg := AudioStreamOggVorbis.load_from_file(abs_path)
+				if ogg != null:
+					stream = ogg
 		if stream != null:
 			if stream is AudioStreamOggVorbis:
 				(stream as AudioStreamOggVorbis).loop = should_loop
@@ -3510,19 +3520,21 @@ func _play_synth_se(se_type: String, volume_db: float) -> void:
 		"curtain_open":
 			dur = 0.22
 
-	var gen := AudioStreamGenerator.new()
-	gen.mix_rate = 22050.0
-	gen.buffer_length = dur + 0.08
-	p.stream = gen
+	p.stream = _get_or_build_synth_wav(se_type, dur)
 	p.volume_db = volume_db + se_gain
 	p.play()
 
-	var pb := p.get_stream_playback() as AudioStreamGeneratorPlayback
-	if pb == null:
-		return
 
-	var sr := gen.mix_rate
-	var total := mini(int(dur * sr), pb.get_frames_available())
+func _get_or_build_synth_wav(se_type: String, dur: float) -> AudioStreamWAV:
+	if _synth_wav_cache.has(se_type):
+		return _synth_wav_cache[se_type] as AudioStreamWAV
+
+	var sr_int := 22050
+	var sr := float(sr_int)
+	var total := maxi(int(dur * sr), 64)
+	var pcm := PackedByteArray()
+	pcm.resize(total * 2)
+
 	var phase := 0.0
 	var phase2 := 0.0
 	var smooth_noise := 0.0
@@ -3585,7 +3597,15 @@ func _play_synth_se(se_type: String, volume_db: float) -> void:
 		if i > total - 64:
 			val *= float(total - i) / 64.0
 		val = clampf(val, -0.95, 0.95)
-		pb.push_frame(Vector2(val, val))
+		pcm.encode_s16(i * 2, clampi(int(round(val * 32767.0)), -32768, 32767))
+
+	var wav := AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = sr_int
+	wav.stereo = false
+	wav.data = pcm
+	_synth_wav_cache[se_type] = wav
+	return wav
 
 
 # ==============================================================================

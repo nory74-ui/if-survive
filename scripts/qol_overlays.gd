@@ -597,9 +597,9 @@ func _build_settings_overlay() -> void:
 
 	var help_lbl := Label.new()
 	help_lbl.text = (
-		"【操作一覧】　左クリック / Space / Enter / Z：文章送り　｜　右クリック / M：ウィンドウ非表示\n"
-		+ "H / マウス上ホイール：履歴を開く　｜　A：自動送り切替　｜　S：スキップ切替　｜　Ctrl長押し：押下中スキップ\n"
-		+ "Q / F5：急速記録（クイックセーブ）　｜　L / F9：急速再開（クイックロード）　｜　1〜9：選択肢決定　｜　Esc：戻る"
+		"【操作一覧】　左クリック / Space / Enter / Z：文章送り　|　右クリック / M：ウィンドウ非表示\n"
+		+ "H / マウス上ホイール：履歴を開く　|　A：自動送り切替　|　S：スキップ切替　|　Ctrl長押し：押下中スキップ\n"
+		+ "Q / F5：急速記録（クイックセーブ）　|　L / F9：急速再開（クイックロード）　|　1〜9：選択肢決定　|　Esc：戻る"
 	)
 	help_lbl.add_theme_color_override("font_color", COLOR_MUTED)
 	help_lbl.add_theme_font_size_override("font_size", 21)
