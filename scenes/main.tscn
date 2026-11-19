@@ -173,7 +173,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -354.0
+offset_top = -372.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
@@ -182,7 +182,7 @@ mouse_filter = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 54.0
+offset_bottom = 48.0
 grow_horizontal = 2
 mouse_filter = 2
 expand_mode = 1
@@ -192,7 +192,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 54.0
+offset_top = 48.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -206,18 +206,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 138
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 138
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 16
 
 [node name="VBox" type="VBoxContainer" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 11
+theme_override_constants/separation = 9
 
 [node name="SpeakerRow" type="HBoxContainer" parent="ShakeRoot/GameScreen/MessageWindow/ContentMargin/VBox"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 15
@@ -437,19 +437,19 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ChoicePanel" type="PanelContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter"]
-custom_minimum_size = Vector2(1260, 0)
+custom_minimum_size = Vector2(1460, 0)
 layout_mode = 2
 
 [node name="ChoiceMargin" type="MarginContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 4
 
 [node name="ChoiceVBox" type="VBoxContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 18
 
 [node name="ChoicePromptLabel" type="Label" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin/ChoiceVBox"]
 layout_mode = 2
@@ -463,7 +463,7 @@ color = Color(0.784314, 0.658824, 0.419608, 0.75)
 
 [node name="ChoicesContainer" type="VBoxContainer" parent="ShakeRoot/ChoiceOverlay/ChoiceCenter/ChoicePanel/ChoiceMargin/ChoiceVBox"]
 layout_mode = 2
-theme_override_constants/separation = 21
+theme_override_constants/separation = 16
 
 [node name="BacklogOverlay" type="Control" parent="ShakeRoot"]
 visible = false

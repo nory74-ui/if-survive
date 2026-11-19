@@ -411,26 +411,27 @@ func _setup_styles_and_shaders() -> void:
 
 	_gold_divider.color = COLOR_GOLD
 	_speaker_label.add_theme_color_override("font_color", COLOR_GOLD)
-	_speaker_label.add_theme_font_size_override("font_size", 35)
+	_speaker_label.add_theme_font_size_override("font_size", 33)
 
 	_body_text.bbcode_enabled = false
 	_body_text.scroll_active = false
 	_body_text.fit_content = false
-	_body_text.add_theme_font_size_override("normal_font_size", 32)
-	_body_text.add_theme_constant_override("line_separation", 12)
+	_body_text.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	_body_text.add_theme_font_size_override("normal_font_size", 28)
+	_body_text.add_theme_constant_override("line_separation", 8)
 	_body_text.add_theme_color_override("default_color", COLOR_PAPER)
 
 	_next_indicator.add_theme_color_override("font_color", COLOR_GOLD)
 	_next_indicator.add_theme_font_size_override("font_size", 27)
 
 	# 上部HUD場所パネル
-	var loc_sb := _make_box_style(COLOR_SUMI, COLOR_GOLD, 1, 27, 15)
+	var loc_sb := _make_box_style(COLOR_SUMI, COLOR_GOLD, 1, 22, 12)
 	loc_sb.border_width_left = 4
 	_location_panel.add_theme_stylebox_override("panel", loc_sb)
 	_chapter_label.add_theme_color_override("font_color", COLOR_GOLD)
-	_chapter_label.add_theme_font_size_override("font_size", 21)
+	_chapter_label.add_theme_font_size_override("font_size", 20)
 	_location_label.add_theme_color_override("font_color", COLOR_PAPER)
-	_location_label.add_theme_font_size_override("font_size", 26)
+	_location_label.add_theme_font_size_override("font_size", 24)
 
 	# 透かしラベル
 	_bg_watermark.add_theme_color_override("font_color", Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.30))
@@ -476,10 +477,11 @@ void fragment() {
 	_choice_blur_rect.material = blur_mat
 
 	# 各種オーバーレイパネル
-	var panel_sb := _make_box_style(Color(0.094, 0.094, 0.122, 0.95), COLOR_GOLD, 1, 42, 36)
+	var panel_sb := _make_box_style(Color(0.094, 0.094, 0.122, 0.95), COLOR_GOLD, 1, 38, 28)
 	_choice_panel.add_theme_stylebox_override("panel", panel_sb)
+	_choice_prompt_label.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
 	_choice_prompt_label.add_theme_color_override("font_color", COLOR_PAPER)
-	_choice_prompt_label.add_theme_font_size_override("font_size", 33)
+	_choice_prompt_label.add_theme_font_size_override("font_size", 30)
 
 	_backlog_panel.add_theme_stylebox_override("panel", _make_box_style(Color(0.07, 0.07, 0.09, 0.95), COLOR_GOLD, 1, 42, 33))
 	_gallery_panel.add_theme_stylebox_override("panel", _make_box_style(Color(0.07, 0.07, 0.09, 0.96), COLOR_GOLD, 1, 45, 36))
@@ -660,8 +662,8 @@ func _setup_qol_ui() -> void:
 	_start_button.add_theme_font_size_override("font_size", 26)
 	row1.add_child(_start_button)
 
-	_continue_button = _make_title_btn("栞から再開（続きから）", 24, 68)
-	_continue_button.custom_minimum_size = Vector2(440, 68)
+	_continue_button = _make_title_btn("栞から再開（続きから）", 23, 68)
+	_continue_button.custom_minimum_size = Vector2(540, 68)
 	_continue_button.clip_text = true
 	_continue_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	row1.add_child(_continue_button)
@@ -702,7 +704,7 @@ func _setup_qol_ui() -> void:
 
 	# 2. ゲーム画面 TopHUD ボタン拡充（履歴・自動・スキップ・記録・設定・音切替・タイトルへ）
 	var hud_btns := $ShakeRoot/GameScreen/TopHUD/HudButtons as HBoxContainer
-	hud_btns.offset_left = -1210.0
+	hud_btns.offset_left = -860.0
 	hud_btns.offset_right = -36.0
 	hud_btns.add_theme_constant_override("separation", 10)
 
@@ -1965,6 +1967,7 @@ func _show_line(index: int, append_backlog: bool = true, suppress_oneshot_fx: bo
 
 	_full_text = str(line.get("text", ""))
 	_body_text.text = _full_text
+	_fit_body_text_to_window()
 	_parsed_text = _body_text.get_parsed_text()
 	if _parsed_text.is_empty():
 		_parsed_text = _full_text
@@ -1989,6 +1992,25 @@ func _show_line(index: int, append_backlog: bool = true, suppress_oneshot_fx: bo
 			"speaker": speaker,
 			"text": _full_text,
 		})
+
+
+func _fit_body_text_to_window() -> void:
+	var base_fs := 28
+	var base_sep := 8
+	_body_text.add_theme_font_size_override("normal_font_size", base_fs)
+	_body_text.add_theme_constant_override("line_separation", base_sep)
+	var avail_h := _body_text.size.y
+	if avail_h <= 10.0:
+		return
+	var candidate_sizes := [28, 26, 24, 22]
+	var candidate_seps := [8, 6, 5, 4]
+	for idx in range(candidate_sizes.size()):
+		var fs: int = candidate_sizes[idx]
+		var sep: int = candidate_seps[idx]
+		_body_text.add_theme_font_size_override("normal_font_size", fs)
+		_body_text.add_theme_constant_override("line_separation", sep)
+		if float(_body_text.get_content_height()) <= avail_h - 4.0:
+			break
 
 
 func _apply_speaker_style(speaker: String, instant: bool = false) -> void:
@@ -2782,7 +2804,8 @@ func _create_choice_button(
 	is_compact: bool = false
 ) -> Button:
 	var btn := Button.new()
-	btn.custom_minimum_size = Vector2(1170, 148 if is_compact else 171)
+	var base_min_h := 136.0 if is_compact else 156.0
+	btn.custom_minimum_size = Vector2(1360, base_min_h)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.focus_mode = Control.FOCUS_ALL
 
@@ -2819,13 +2842,15 @@ func _create_choice_button(
 	left_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(left_bar)
 
+	var pad_top := 12 if is_compact else 14
+	var pad_bot := 12 if is_compact else 14
 	var margin := MarginContainer.new()
 	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	margin.add_theme_constant_override("margin_left", 33)
-	margin.add_theme_constant_override("margin_right", 33)
-	margin.add_theme_constant_override("margin_top", 12 if is_compact else 15)
-	margin.add_theme_constant_override("margin_bottom", 12 if is_compact else 15)
+	margin.add_theme_constant_override("margin_left", 28)
+	margin.add_theme_constant_override("margin_right", 28)
+	margin.add_theme_constant_override("margin_top", pad_top)
+	margin.add_theme_constant_override("margin_bottom", pad_bot)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(margin)
 
@@ -2836,15 +2861,15 @@ func _create_choice_button(
 	margin.add_child(vbox)
 
 	var title_row := HBoxContainer.new()
-	title_row.add_theme_constant_override("separation", 12)
+	title_row.add_theme_constant_override("separation", 14)
 	title_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(title_row)
 
 	var lbl := Label.new()
 	lbl.text = ("★ " if is_true_route else "◆ ") + main_label
 	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.add_theme_font_size_override("font_size", 27 if is_compact else 30)
+	lbl.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	lbl.add_theme_font_size_override("font_size", 25 if is_compact else 27)
 	lbl.add_theme_color_override("font_color", default_lbl_col)
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_row.add_child(lbl)
@@ -2854,7 +2879,8 @@ func _create_choice_button(
 	var uncollected := _save_store.count_uncollected_endings_from(_scenes, target_id)
 	var badge_lbl := Label.new()
 	badge_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	badge_lbl.add_theme_font_size_override("font_size", 20)
+	badge_lbl.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	badge_lbl.add_theme_font_size_override("font_size", 19)
 	if not visited_target:
 		badge_lbl.text = "【未踏ルート】"
 		badge_lbl.add_theme_color_override("font_color", COLOR_GOLD)
@@ -2868,11 +2894,23 @@ func _create_choice_button(
 
 	var sub_lbl := Label.new()
 	sub_lbl.text = sub_text
-	sub_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	sub_lbl.add_theme_font_size_override("font_size", 21 if is_compact else 23)
+	sub_lbl.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+	sub_lbl.add_theme_font_size_override("font_size", 20 if is_compact else 21)
 	sub_lbl.add_theme_color_override("font_color", Color("D8C596") if is_true_route else COLOR_MUTED)
 	sub_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(sub_lbl)
+
+	# 文字の折り返し量に応じてボタンの最小高さを自動拡張（枠外はみ出しを防止）
+	var sync_btn_min_height := func() -> void:
+		if not is_instance_valid(btn) or not is_instance_valid(vbox):
+			return
+		var needed_h := ceilf(vbox.get_combined_minimum_size().y + float(pad_top + pad_bot) + 10.0)
+		var target_h := maxf(base_min_h, needed_h)
+		if absf(btn.custom_minimum_size.y - target_h) > 0.5:
+			btn.custom_minimum_size = Vector2(btn.custom_minimum_size.x, target_h)
+	vbox.minimum_size_changed.connect(sync_btn_min_height)
+	btn.resized.connect(sync_btn_min_height)
+	sync_btn_min_height.call_deferred()
 
 	# ホバーライン（下部金線）
 	var hover_line := ColorRect.new()

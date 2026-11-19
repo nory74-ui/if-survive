@@ -382,7 +382,7 @@ func _draw_moonlight(h: float) -> void:
 			PackedVector2Array([
 				Vector2(x0, 0.0),
 				Vector2(x0 + bw, 0.0),
-				Vector2(x0 + bw + sk * 1.35, h * 0.85),
+				Vector2(x0 + sk + bw * 1.35, h * 0.85),
 				Vector2(x0 + sk, h * 0.85),
 			]),
 			PackedColorArray([top_col, top_col, bot_col, bot_col])

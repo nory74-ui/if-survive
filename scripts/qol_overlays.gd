@@ -187,25 +187,26 @@ func close_settings() -> void:
 # --- 記録帳（セーブ / ロード） ---
 
 func _build_save_overlay() -> void:
-	var shell := _create_modal_shell("SaveLoadOverlay", Vector2(1280, 820), close_save_load)
+	var shell := _create_modal_shell("SaveLoadOverlay", Vector2(1380, 840), close_save_load)
 	_save_overlay = shell["root"]
 	var vbox: VBoxContainer = shell["vbox"]
 	add_child(_save_overlay)
 
 	var header := HBoxContainer.new()
-	header.add_theme_constant_override("separation", 18)
+	header.add_theme_constant_override("separation", 14)
 	vbox.add_child(header)
 
 	_save_title_lbl = Label.new()
 	_save_title_lbl.text = "記録帳 ― 栞の保存と再開"
 	_save_title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_save_title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_save_title_lbl.add_theme_color_override("font_color", COLOR_GOLD)
-	_save_title_lbl.add_theme_font_size_override("font_size", 36)
+	_save_title_lbl.add_theme_font_size_override("font_size", 31)
 	header.add_child(_save_title_lbl)
 
 	_tab_save_btn = Button.new()
 	_tab_save_btn.text = "記録する（書込）"
-	_tab_save_btn.custom_minimum_size = Vector2(240, 56)
+	_tab_save_btn.custom_minimum_size = Vector2(216, 54)
 	_tab_save_btn.pressed.connect(func() -> void:
 		if _can_save:
 			_save_mode_write = true
@@ -215,7 +216,7 @@ func _build_save_overlay() -> void:
 
 	_tab_load_btn = Button.new()
 	_tab_load_btn.text = "再開する（読込）"
-	_tab_load_btn.custom_minimum_size = Vector2(240, 56)
+	_tab_load_btn.custom_minimum_size = Vector2(216, 54)
 	_tab_load_btn.pressed.connect(func() -> void:
 		_save_mode_write = false
 		_refresh_save_overlay()
@@ -224,7 +225,7 @@ func _build_save_overlay() -> void:
 
 	_save_close_btn = Button.new()
 	_save_close_btn.text = "閉じる"
-	_save_close_btn.custom_minimum_size = Vector2(160, 56)
+	_save_close_btn.custom_minimum_size = Vector2(144, 54)
 	_save_close_btn.pressed.connect(close_save_load)
 	header.add_child(_save_close_btn)
 
@@ -290,13 +291,13 @@ func _create_slot_row(slot_id: String) -> PanelContainer:
 	row.add_child(info_col)
 
 	var top_line := HBoxContainer.new()
-	top_line.add_theme_constant_override("separation", 14)
+	top_line.add_theme_constant_override("separation", 12)
 	info_col.add_child(top_line)
 
 	var name_lbl := Label.new()
 	name_lbl.text = str(SaveStore.SLOT_LABELS.get(slot_id, slot_id))
 	name_lbl.add_theme_color_override("font_color", COLOR_CRIMSON.lightened(0.35) if is_quick else COLOR_GOLD)
-	name_lbl.add_theme_font_size_override("font_size", 25)
+	name_lbl.add_theme_font_size_override("font_size", 23)
 	top_line.add_child(name_lbl)
 
 	if has_data:
@@ -310,28 +311,29 @@ func _create_slot_row(slot_id: String) -> PanelContainer:
 		else:
 			chap_lbl.text = st
 		chap_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		chap_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		chap_lbl.add_theme_color_override("font_color", COLOR_PAPER)
-		chap_lbl.add_theme_font_size_override("font_size", 24)
+		chap_lbl.add_theme_font_size_override("font_size", 22)
 		top_line.add_child(chap_lbl)
 
 		if bool(data.get("at_choices", false)):
 			var ch_badge := Label.new()
 			ch_badge.text = "【分岐選択中】"
 			ch_badge.add_theme_color_override("font_color", COLOR_GOLD)
-			ch_badge.add_theme_font_size_override("font_size", 21)
+			ch_badge.add_theme_font_size_override("font_size", 19)
 			top_line.add_child(ch_badge)
 
 		var flag_count := _count_active_flags(data.get("session_flags", data.get("flags", {})))
 		var flag_lbl := Label.new()
 		flag_lbl.text = "（分岐印：%d）" % flag_count
 		flag_lbl.add_theme_color_override("font_color", COLOR_GOLD if flag_count > 0 else COLOR_MUTED)
-		flag_lbl.add_theme_font_size_override("font_size", 20)
+		flag_lbl.add_theme_font_size_override("font_size", 19)
 		top_line.add_child(flag_lbl)
 
 		var time_lbl := Label.new()
 		time_lbl.text = str(data.get("saved_at", data.get("timestamp", "")))
 		time_lbl.add_theme_color_override("font_color", COLOR_MUTED)
-		time_lbl.add_theme_font_size_override("font_size", 20)
+		time_lbl.add_theme_font_size_override("font_size", 19)
 		top_line.add_child(time_lbl)
 
 		var spk := str(data.get("speaker", ""))
@@ -340,13 +342,14 @@ func _create_slot_row(slot_id: String) -> PanelContainer:
 		text_line.text = ("【%s】%s" % [spk, exc]) if not spk.is_empty() else exc
 		text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		text_line.add_theme_color_override("font_color", COLOR_PAPER.darkened(0.12))
-		text_line.add_theme_font_size_override("font_size", 23)
+		text_line.add_theme_font_size_override("font_size", 22)
 		info_col.add_child(text_line)
 
 		var loc_lbl := Label.new()
 		loc_lbl.text = str(data.get("location", ""))
+		loc_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		loc_lbl.add_theme_color_override("font_color", COLOR_MUTED)
-		loc_lbl.add_theme_font_size_override("font_size", 19)
+		loc_lbl.add_theme_font_size_override("font_size", 18)
 		info_col.add_child(loc_lbl)
 	else:
 		var empty_lbl := Label.new()
@@ -490,7 +493,7 @@ func _create_chapter_card(sid: String, sc: Dictionary, visited: bool) -> PanelCo
 	var bg_col := Color(0.105, 0.095, 0.125, 0.94) if visited else Color(0.06, 0.06, 0.08, 0.90)
 
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(670, 178)
+	card.custom_minimum_size = Vector2(670, 188)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.add_theme_stylebox_override("panel", _make_box(bg_col, border_col, 1, 24, 18))
 
@@ -532,15 +535,16 @@ func _create_chapter_card(sid: String, sc: Dictionary, visited: bool) -> PanelCo
 
 	var title_lbl := Label.new()
 	title_lbl.text = str(sc.get("title", "")) if visited else "未到達の章"
+	title_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	title_lbl.add_theme_color_override("font_color", COLOR_PAPER if visited else COLOR_MUTED)
-	title_lbl.add_theme_font_size_override("font_size", 30)
+	title_lbl.add_theme_font_size_override("font_size", 28)
 	left_col.add_child(title_lbl)
 
 	var loc_lbl := Label.new()
 	loc_lbl.text = str(sc.get("location", "")) if visited else "本編を進めてこの章へ至ると解放されます"
-	loc_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	loc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	loc_lbl.add_theme_color_override("font_color", COLOR_MUTED)
-	loc_lbl.add_theme_font_size_override("font_size", 20)
+	loc_lbl.add_theme_font_size_override("font_size", 19)
 	left_col.add_child(loc_lbl)
 
 	var jump_btn := Button.new()
@@ -560,7 +564,7 @@ func _create_chapter_card(sid: String, sc: Dictionary, visited: bool) -> PanelCo
 # --- 環境設定モーダル ---
 
 func _build_settings_overlay() -> void:
-	var shell := _create_modal_shell("SettingsOverlay", Vector2(1180, 820), close_settings)
+	var shell := _create_modal_shell("SettingsOverlay", Vector2(1280, 840), close_settings)
 	_settings_overlay = shell["root"]
 	var vbox: VBoxContainer = shell["vbox"]
 	add_child(_settings_overlay)
@@ -656,8 +660,9 @@ func _build_settings_overlay() -> void:
 		+ "H / マウス上ホイール：履歴を開く　|　A：自動送り切替　|　S：スキップ切替　|　Ctrl長押し：押下中スキップ\n"
 		+ "Q / F5：急速記録（クイックセーブ）　|　L / F9：急速再開（クイックロード）　|　1〜9：選択肢決定　|　Esc：戻る"
 	)
+	help_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help_lbl.add_theme_color_override("font_color", COLOR_MUTED)
-	help_lbl.add_theme_font_size_override("font_size", 21)
+	help_lbl.add_theme_font_size_override("font_size", 20)
 	help_panel.add_child(help_lbl)
 
 	var footer := HBoxContainer.new()
