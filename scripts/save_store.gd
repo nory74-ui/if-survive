@@ -5,9 +5,11 @@ const SAVE_PATH := "user://save_data.json"
 const SAVE_VERSION := 3
 const DEFAULT_EPISODE_ID := "01_nobunaga"
 const CHAPTER_ORDER: Array[String] = [
-	"pro_01", "pro_02", "pro_03",
-	"routeA_01", "routeA_02", "end_01", "end_02",
-	"routeB_01", "routeB_02", "end_03", "end_04",
+	"pro_01", "pro_02", "pro_03", "pro_04",
+	"routeA_01", "routeA_02", "routeA_03", "routeA_04", "routeA_05",
+	"end_01", "end_02", "end_05_true",
+	"routeB_01", "routeB_02", "routeB_03", "routeB_04", "routeB_05",
+	"end_03", "end_04",
 ]
 const SLOT_IDS: Array[String] = ["quick", "1", "2", "3"]
 const SLOT_LABELS := {

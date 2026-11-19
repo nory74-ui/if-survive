@@ -13,9 +13,10 @@
       "seal": "本能残照",
       "logo": "assets/title_logo.png",
       "protagonist": "織田信長",
-      "summary": "炎上する本能寺の地下道から生還した第六天魔王。自らの「死」を利用し、野心を覗かせる秀吉や家臣たちの本音を見極める。",
+      "summary": "本能寺の炎を生き延び、嫡男・信忠を失った第六天魔王。光秀の真意、家康の伊賀越え、秀吉の冷徹な野心が交錯する中、五つの未来が分岐する。",
       "accent_color": "#9E1B1B",
       "dir": "res://episodes/01_nobunaga",
+      "total_endings": 5,
       "available": true
     },
     {
@@ -25,10 +26,12 @@
       "title": "近江屋・残照録",
       "subtitle": "〜慶応三年、その先の海援〜",
       "seal": "近江残照",
+      "logo": "",
       "protagonist": "坂本龍馬",
       "summary": "京・近江屋の凶刃を紙一重で生き延びた風雲児。薩長藩閥による新政府の専横を止め、真の海援国家を創り上げられるか。",
       "accent_color": "#2E6B7E",
       "dir": "res://episodes/02_ryoma",
+      "total_endings": 5,
       "available": false
     },
     {
@@ -38,10 +41,12 @@
       "title": "衣川・残照録",
       "subtitle": "〜文治五年、その先の戦神〜",
       "seal": "衣川残照",
+      "logo": "",
       "protagonist": "源義経",
       "summary": "奥州平泉の包囲網を突破した悲劇の天才武将。兄・頼朝の鎌倉幕府へ反旗を翻すか、北の海を越えて未知の大陸へ渡るか。",
       "accent_color": "#5B4B8A",
       "dir": "res://episodes/03_yoshitsune",
+      "total_endings": 5,
       "available": false
     }
   ]

@@ -1,9 +1,9 @@
 {
   "meta": {
     "title": "本能寺・残照録 〜天正十年、その先の覇王〜",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "startScene": "pro_01",
-    "totalEndings": 4
+    "totalEndings": 5
   },
   "assets": {
     "backgrounds": {
@@ -77,7 +77,7 @@
       "lines": [
         {
           "speaker": "",
-          "text": "最初は、朝霧を切り裂く雷鳴かと思った。だが、鼓膜を震わせたのは紛れもない火縄銃の轟音。続いて怒号と刃の音が、静寂だったはずの寺の境内を飲み込んでいく。",
+          "text": "最初は、京の朝霧を切り裂く雷鳴かと思った。だが、鼓膜を撃ち抜いたのは紛れもなく火縄銃の乾いた斉射。続いて、門を破る怒号と鉄のぶつかり合う音が、薄暗い本能寺の静寂を一瞬で食い破る。",
           "se": "gunshot",
           "shake": true,
           "flash": "white",
@@ -85,74 +85,88 @@
         },
         {
           "speaker": "森蘭丸",
-          "text": "「上様！ 敵襲にございます！ 大軍が寺の四方を完全に包囲しております！」",
+          "text": "「上様！ 敵襲にございます！ 大軍がすでに四方の門を完全に封鎖しております！」",
+          "voice": "voice_ranmaru_urgent",
           "se": "door_slam",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "ranmaru_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "ranmaru_normal",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
           "text": "「兵の数は。旗印は何だ」",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "ranmaru_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "森蘭丸",
           "text": "「およそ一万三千！ 旗は……水色に桔梗紋！ 明智日向守の軍勢にございます！」",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "ranmaru_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "ranmaru_normal",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
           "text": "「……光秀か」",
-          "bgm": "silence",
+          "voice": "voice_nobunaga_umu",
           "se": "fire_roar",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "ranmaru_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "脳裏に浮かんだのは、数日前に安土で茶を喫した折の、あの男の穏やかな微笑みだった。",
-          "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "mitsuhide_normal", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "無理難題を押し付けた覚えはある。だが、天下布武という同じ夢の頂を見ていたはずの男が、なぜ今、この暁に刃を向ける。"
+          "text": "脳裏をよぎったのは、数日前に安土の饗応の席で見せた、あの男の静かな横顔だった。四国攻めの方針を覆し、光秀が築いた長宗我部との盟約を反故にした。理不尽を強いた覚えはある。だが、天下布武という同じ地獄の道筋を最も深く理解していたはずの男が、なぜ今、牙を剥く。"
         },
         {
           "speaker": "織田信長",
-          "text": "「是非に及ばず――」",
-          "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "ranmaru_normal", "pos": "right", "active": false }
-          ]
+          "text": "「是非に及ばず――」"
         },
         {
           "speaker": "",
-          "text": "口をついて出たその言葉を、俺は奥歯で噛み潰した。（否。及ばぬはずがあるか。日ノ本を変える大業は、まだ半ばだぞ……！）"
+          "text": "口をついて出たその諦めの言葉を、俺は奥歯で血の味がするほど強く噛み潰した。（否。及ばぬはずがあるか。……妙覚寺に泊まっている信忠に、まだ日ノ本のすべてを渡し終えてはおらぬのだ！）"
         },
         {
-          "speaker": "森蘭丸",
-          "text": "「御意。ならばこの蘭丸、命に代えても上様を炎の外へお通しいたします！」",
-          "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "ranmaru_normal", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "俺は傍らの弓と槍を掴み取り、紅蓮の煙が立ち込める回廊へと踏み出した。血路は、この手で切り開く。"
+          "speaker": "織田信長",
+          "text": "「蘭丸、弓と槍を持て！ 光秀の首を刎ねるまで、俺は死なぬ！」",
+          "voice": "voice_nobunaga_rage"
         }
       ],
       "next": "pro_02"
@@ -168,79 +182,119 @@
         {
           "speaker": "弥助",
           "text": "「上様、こちらへ！ 裏手の井戸の脇に、南蛮寺へ抜ける古い地下水路がございます！」",
+          "voice": "voice_yasuke_urgent",
           "sprites": [
-            { "id": "yasuke_combat", "pos": "left", "active": true },
-            { "id": "ranmaru_normal", "pos": "right", "active": false }
+            {
+              "id": "yasuke_combat",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "黒い巨躯が降り注ぐ矢の雨を体ごと受け止め、突進で敵陣を砕く。その背を追い、俺もまた長槍を振るって迫る明智兵を薙ぎ払う。",
-          "se": "sword_slash",
-          "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "だが黒煙が視界を奪い、退路の角から新たな槍隊と鉄砲衆が雪崩れ込んできた。"
+          "text": "黒い巨躯が、降り注ぐ矢の雨を鎧ごと受け止めながら血路をこじ開ける。左肩を明智兵の槍先にかすめられながらも、俺は焼け落ちる回廊を駆けた。だが角を曲がった瞬間、黒煙の奥から無数の長槍の穂先が壁のように迫る。"
         },
         {
           "speaker": "森蘭丸",
           "text": "「――ここは私が食い止めます！」",
+          "voice": "voice_ranmaru_resolve",
           "sprites": [
-            { "id": "yasuke_combat", "pos": "left", "active": false },
-            { "id": "ranmaru_smile", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "炎に照らされた若き小姓は、振り返りもせず愛用の十文字槍の石突きを床に打ち付けた。"
-        },
-        {
-          "speaker": "森蘭丸",
-          "text": "「上様より賜りしこの十文字槍、今こそ使い時にございます！ 一歩たりとも通しはせぬ！」",
-          "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "ranmaru_smile", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "ranmaru_smile",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「蘭丸、貴様……！」",
+          "text": "「蘭丸、貴様……下がれ！ 命を捨てるな！」",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "ranmaru_smile", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_smile",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "森蘭丸",
-          "text": "「『是非に及ばず』などとは仰いますな。上様の天下は、この先にあるのです！ 弥助殿、上様を頼む！」",
+          "text": "「上様。かつて仰せになりましたな。『古い世を焼き払うのは俺の役目、その灰の上に新しい国を建てるのは信忠と若いお前たちの役目だ』と」",
+          "voice": "voice_ranmaru_smile",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "ranmaru_smile", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "ranmaru_smile",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
+          "speaker": "",
+          "text": "血と煤にまみれた頬で、十八の小姓が驚くほど穏やかに笑った。"
+        },
+        {
+          "speaker": "森蘭丸",
+          "text": "「ならば上様、まだ終わってはなりませぬ。……弥助殿、上様を頼む！」"
+        },
+        {
           "speaker": "弥助",
-          "text": "「……承知した、蘭丸殿！ 上様、お許しを！」",
+          "text": "「……承知した、蘭丸殿！」",
+          "voice": "voice_yasuke_loyal",
           "sprites": [
-            { "id": "yasuke_combat", "pos": "left", "active": true },
-            { "id": "ranmaru_smile", "pos": "right", "active": false }
+            {
+              "id": "yasuke_combat",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_smile",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "織田信長",
           "text": "「待て、蘭丸！ 死ぬな――！」",
+          "voice": "voice_nobunaga_rage",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "ranmaru_smile", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "ranmaru_smile",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "燃え落ちる梁が二人の間を隔てた。紅蓮の向こうで槍を構え直す影が見えた瞬間、弥助の太い腕が俺を抱え上げ、暗い水路の闇へと飛び込んだ。",
+          "text": "燃え盛る太い梁が、轟音と共に二人の間を断ち切った。紅蓮の炎の向こうで若き小姓が槍を構え直す影が見えた瞬間、弥助の太い腕が俺の身体を抱え上げ、底知れぬ水路の闇へと飛び込んだ。",
           "se": "crash_fire",
           "shake": true,
           "flash": "red",
@@ -251,7 +305,7 @@
     },
     "pro_03": {
       "chapter": "序章・三",
-      "title": "灰と朝霧の決断",
+      "title": "二条の黒煙",
       "location": "天正十年 六月二日 朝 ― 京の外れ・竹林",
       "bg": "bg_kyoto_bamboo",
       "bgm": "quiet_resolve",
@@ -259,84 +313,135 @@
       "lines": [
         {
           "speaker": "",
-          "text": "冷たい泥水にまみれ、地下水路を這い抜けた俺たちが辿り着いたのは、京の西外れにある無人の竹林だった。東の空には、本能寺を焼き尽くす黒煙が立ち昇っている。",
+          "text": "冷たい泥水にまみれ、地下水路を這い抜けた俺たちが辿り着いたのは、京の西外れにある無人の竹林だった。東の空を振り返れば、本能寺の方角から朝焼けを塗り潰すほどの黒煙が立ち昇っていた。",
           "se": "water_escape",
           "sprites": []
         },
         {
+          "speaker": "",
+          "text": "だが――俺の視線は、そのさらに北東に釘付けになった。"
+        },
+        {
           "speaker": "弥助",
-          "text": "「……ご無事でございますか、上様。すぐにお傷の手当てを」",
+          "text": "「上様……もう一本、煙が上がっております。あれは……二条の御所の方角にございます」",
+          "voice": "voice_yasuke_quiet",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "yasuke_combat", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「左肩を浅く切られた程度だ。それより貴様、なぜそこまでする。異国から来た貴様には、逃げる道もあったはずだ」",
+          "text": "「……信忠か」",
+          "voice": "voice_nobunaga_quiet",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
+        {
+          "speaker": "",
+          "text": "すでに織田家の家督を譲り、次の天下人として育て上げていた嫡男・織田信忠。今朝、あいつはすぐ近くの妙覚寺に泊まっていたはずだ。異変を知り、わずかな手勢で二条御所へ立て籠もり、光秀の大軍を引き受けたのだろう。"
+        },
+        {
+          "speaker": "",
+          "text": "見上げれば、二条御所から昇る煙の色が、黒から薄い白へと変わり始めていた。それは、すべての戦いが終わり、城が燃え尽きた合図だった。"
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「……馬鹿者が。親父の仇など放っておいて、さっさと安土へ逃げればよかったのだ」",
+          "voice": "voice_nobunaga_quiet"
+        },
+        {
+          "speaker": "",
+          "text": "声は震えていなかった。だが、握りしめた拳の爪が掌に深く食い込み、生暖かい血が滲み出していた。蘭丸を失い、信忠を失った。俺は生き延びたのではない――死んだ者たちの屍の上に、ひとり取り残されただけなのだ。"
+        }
+      ],
+      "next": "pro_04"
+    },
+    "pro_04": {
+      "chapter": "序章・四",
+      "title": "灰と朝霧の決断",
+      "location": "天正十年 六月二日 朝 ― 京の外れ・竹林",
+      "bg": "bg_kyoto_bamboo",
+      "bgm": "quiet_resolve",
+      "effect": "mist",
+      "lines": [
         {
           "speaker": "弥助",
-          "text": "「上様は、肌の色も言葉も違う私を『人』として、武士として遇してくださいました。この命、上様と共にございます」",
+          "text": "「上様。明智の兵たちは『信長様と信忠様を討ち取った』と勝ち鬨を上げておりました。本能寺も二条御所も焼け落ちては、遺体が見つからずとも、誰もが織田の時代が終わったと信じるでしょう」",
+          "voice": "voice_yasuke_quiet",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": false },
-            { "id": "yasuke_combat", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "弥助の真っ直ぐな眼差しに、俺は静かに頷き、京の方角へ視線を戻した。"
-        },
-        {
-          "speaker": "弥助",
-          "text": "「明智の兵たちは『信長様を討ち取った』と勝ち鬨を上げておりました。あの炎では、誰もが上様の死を信じるでしょう」"
-        },
-        {
-          "speaker": "",
-          "text": "世間は今、織田信長が死んだと思っている。『信長』という巨大な重石が消えた時、日ノ本中の野心が音を立てて動き出す。",
+          "text": "織田信長と、嫡男・信忠の同時死去。この報せが、備中で毛利と対峙する羽柴秀吉へ、越後の上杉と睨み合う柴田勝家へ、そして堺に滞在している同盟者・徳川家康へ届いた時、日ノ本はどう動く。",
           "sprites": [
-            { "id": "nobunaga_wounded", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_wounded",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "数日のうちに、この報せは備中で毛利と対峙する羽柴秀吉のもとへも、越後の上杉と睨み合う柴田勝家のもとへも届くはずだ。"
+          "text": "（家督を継ぐはずだった信忠は、もういない。ならば奴らは――俺の死を悼むか、それとも空位になった天下の玉座へ、一斉に手を伸ばすか？）"
         },
         {
           "speaker": "",
-          "text": "（俺が死んだと知った時、奴らは何を思う？ 主君の仇を討つか、それとも――「次は俺の天下だ」とほくそ笑むか？）"
-        },
-        {
-          "speaker": "",
-          "text": "蘭丸が繋いだこの命、無駄にはできぬ。覇王として直ちに旗を翻すか、それとも闇に潜み家臣たちの本性を見定めるか。"
-        },
-        {
-          "speaker": "",
-          "text": "朝霧が晴れ、冷たい陽光が顔を照らす。焼け焦げた羽織を脱ぎ捨てた俺は、ゆっくりと目を開けた。"
+          "text": "朝霧が晴れ、冷たい陽光が濡れた頬を照らす。焼け焦げた小袖の血を拭い、俺は静かに目を上げた。"
         }
       ],
       "choicePrompt": "弥助「上様、いかがなされますか。これよりどこへ向かいましょう」",
       "choices": [
         {
           "label": "即座に生存を知らせ、光秀を正面から叩き潰す",
-          "sub": "摂津の諸将のもとへ駆け込み、覇王の帰還を宣言して討伐の兵を挙げる",
+          "sub": "摂津の大坂へ駆け込み、覇王の帰還を宣言して光秀討伐の兵を挙げる",
           "target": "routeA_01"
         },
         {
           "label": "「信長は死んだ」ままにしておく",
-          "sub": "死を偽装したまま潜伏し、家臣たちの本音を見極めてから動く",
+          "sub": "死を偽装して堺へ潜伏し、空位となった天下を巡る家臣たちの本音を影から観察する",
           "target": "routeB_01"
         }
       ]
     },
     "routeA_01": {
       "chapter": "覇道篇・一",
-      "title": "覇王の帰還",
+      "title": "覇王の帰還と微かな歪み",
       "location": "天正十年 六月四日 ― 大坂・織田本陣の広間",
       "bg": "bg_osaka_council",
       "bgm": "march_heroic",
@@ -344,65 +449,299 @@
       "lines": [
         {
           "speaker": "",
-          "text": "本能寺の炎をくぐり抜けてから、わずか二日。俺は弥助と共に摂津へ駆け込み、四国攻めを控えていた三男・信孝と丹羽長秀の軍勢と合流した。",
+          "text": "本能寺の炎をくぐり抜けてから、わずか二日。俺と弥助は間道を抜けて摂津・大坂へ駆け込み、四国攻めを控えていた三男・信孝と宿老・丹羽長秀の軍勢と合流した。",
           "se": "war_horn",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
-        },
-        {
-          "speaker": "",
-          "text": "死んだはずの主君が、傷一つ隠さず床几に腰を下ろした瞬間、広間に集まった諸将の顔から血の気が引いた――そして次の瞬間、狂気にも似た歓声が爆発した。"
         },
         {
           "speaker": "織田信長",
-          "text": "「――全軍に伝えよ。織田上総介信長、ここに在り。逆賊・明智光秀の首を刎ね、本能寺に散った蘭丸らの魂に捧げる！」",
+          "text": "「――全軍に伝えよ。織田上総介信長、ここに在り。逆賊・明智光秀の首を刎ね、本能寺と二条御所に散った者たちの魂に捧げる！」",
+          "voice": "voice_nobunaga_rage",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "数万の兵による地鳴りのような勝鬨が天地を揺らす。『信長生存』の報せは、疾風のように畿内を駆け巡った。",
+          "text": "地鳴りのような歓声が広間を揺らす。『信長生存』の報せは疾風のように畿内を駆け巡り、光秀の誘いに揺れていた細川藤孝も筒井順慶も、即座に織田方への参陣を表明した。",
           "se": "battle_cry",
           "shake": true
         },
         {
           "speaker": "",
-          "text": "光秀の誘いに乗ろうとしていた細川藤孝も、筒井順慶も、恐怖に震えながら即座に織田方へ参陣を表明する。もはや明智の軍勢は、袋の鼠だった。"
-        },
-        {
-          "speaker": "弥助",
-          "text": "「上様、山崎への先鋒が整いました。それと……西国より早馬が。備中の羽柴秀吉殿が毛利と和睦し、凄まじい速さで京へ迫っております」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "yasuke_normal", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「ほう……あの距離を、毛利との講和まで済ませて引き返してくるだと？」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "（忠義のゆえか、それとも――『俺を討った光秀』を自らの手で討ち、天下を拾い上げるためか）"
-        },
-        {
-          "speaker": "",
-          "text": "俺は陣太刀の柄を握りしめ、雨雲の垂れ込める山崎へと馬を進めた。"
+          "text": "だが、俺の目は見逃さなかった。俺の生存を泣いて喜ぶ丹羽長秀の隣で、三男・信孝の顔に一瞬だけ浮かんだ複雑な影を。（信忠が死んだ今、もし俺まで死んでいれば、織田の跡目は自分のものだった――）俺の『死』がもたらした一瞬の空白は、肉親の心にすら小さな亀裂を残していたのだ。"
         }
       ],
       "next": "routeA_02"
     },
     "routeA_02": {
       "chapter": "覇道篇・二",
-      "title": "山崎の霧と野心",
+      "title": "堺からの密書",
+      "location": "天正十年 六月五日 夕刻 ― 大坂・本陣",
+      "bg": "bg_osaka_council",
+      "bgm": "suspense_discord",
+      "effect": "none",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "出陣の支度を進める夕刻、堺の豪商・今井宗久からの密使が息を切らして本陣へ駆け込んできた。",
+          "se": "door_slam",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "弥助",
+          "text": "「上様、堺より急報にございます。……徳川家康殿が、今まさに命の危機に晒されております」",
+          "voice": "voice_yasuke_urgent"
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「何？ 家康は俺が安土へ招いた後、堺を見物していたはずだが」",
+          "voice": "voice_nobunaga_nani",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "弥助",
+          "text": "「本能寺の変を知った家康殿は、わずかな供回りで三河へ戻るべく、山深い伊賀路へ入られたとのこと。しかし明智方が懸賞金をかけたため、落ち武者狩りの野伏せりや伊賀衆が四方から迫っているそうにございます」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "徳川家康。俺が二十年来、唯一背中を預けてきた同盟者だ。もし今、家康が伊賀の山中で野垂れ死にすれば、東国は北条や上杉の草刈り場となり、日ノ本は再び十年単位の戦乱へ逆戻りする。",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "だが、今ここで大坂の精鋭や騎馬を割いて伊賀へ救援を送れば、山崎へ向けた進軍が丸一日遅れ、備中から戻ってくるであろう秀吉に一番手柄を奪われかねない。"
+        }
+      ],
+      "choicePrompt": "弥助「今井宗久殿は『上様の直筆の朱印状と護衛衆があれば、堺の銭と伊賀の忍びを動かして家康殿を逃がせる』と伝えておりますが……」",
+      "choices": [
+        {
+          "label": "朱印状と精鋭の騎馬衆を堺へ走らせよ。家康を絶対に死なせるな",
+          "sub": "進軍の遅れを覚悟の上で、今井宗久を通じて家康の伊賀越えを援護する",
+          "set_flag": "saved_ieyasu",
+          "target": "routeA_03"
+        },
+        {
+          "label": "家康は自らの運で生き延びろ。今は全軍で山崎へ急ぐ",
+          "sub": "一兵たりとも割かず、冷徹に目前の光秀討伐へ全力を集中する",
+          "target": "routeA_03"
+        }
+      ]
+    },
+    "routeA_03": {
+      "chapter": "覇道篇・三",
+      "title": "雨夜の語らい",
+      "location": "天正十年 六月十二日 夜 ― 山崎・織田本陣",
+      "bg": "bg_yamazaki_camp",
+      "bgm": "lonely_piano",
+      "effect": "rain",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "六月十二日の夜。明日の決戦を控えた山崎の本陣に、冷たい梅雨が容赦なく降り続いていた。諸将を下がらせた陣幕の中、炭火のわずかな明かりだけが揺れている。幕の入口では、弥助が黙々と大太刀の刃を拭っていた。",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「……弥助。お前の生まれ故郷の海は、この雨の夜よりも広いのか」",
+          "voice": "voice_nobunaga_quiet",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "弥助",
+          "text": "「はい、上様。幾日船を走らせても陸地が見えぬほど広く、陽が落ちれば空と海の境目が金色に溶け合います」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「そうか。……いつか信忠を連れて、南蛮の船で見てやりたかったものだ」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "口にしてから、自分でも驚いた。家臣の前では決して見せない弱音が、この異国の男の前では不思議と零れ落ちる。"
+        },
+        {
+          "speaker": "弥助",
+          "text": "「……上様。あの日、竹林から二条御所の煙をご覧になった時、上様は一滴も涙を流されませんでした」",
+          "voice": "voice_yasuke_quiet",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「第六天魔王が泣いて見せてどうする。俺が一度でも弱みを見せれば、織田の家は明日にでも崩れ落ちる」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "弥助",
+          "text": "「私の故郷には、このような言葉がございます。『死んだ者の魂を背負う戦士は、泣く代わりに、その者たちが愛した未来を生きねばならぬ』と。蘭丸殿も信忠様も、上様が『その先の世界』を創ることを信じて散りました。どうか明日、憎しみだけで刃を振るわれませぬよう」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「……ふっ。説教か、弥助。だが、悪くない」",
+          "voice": "voice_nobunaga_umu",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "next": "routeA_04"
+    },
+    "routeA_04": {
+      "chapter": "覇道篇・四",
+      "title": "山崎の霧・思想の刃",
       "location": "天正十年 六月十三日 夕刻 ― 山崎・本陣",
       "bg": "bg_yamazaki_camp",
       "bgm": "sorrow_confrontation",
@@ -410,107 +749,194 @@
       "lines": [
         {
           "speaker": "",
-          "text": "六月十三日、山崎。戦いは半日も経たずに決した。敗走の途上で捕らえられ、深手を負って引き据えられた男は、血にまみれながらも澄んだ目をしていた。",
+          "text": "六月十三日、夕刻。山崎の合戦は織田軍の圧勝に終わった。雨と泥にまみれ、脇腹に深手を負って俺の前に引き据えられた明智光秀は、縄を打たれてなお、背筋を凛と伸ばしていた。",
           "sprites": []
         },
         {
           "speaker": "織田信長",
-          "text": "「……光秀。貴様ほどの男が、なぜ勝算の薄い謀反に走った」",
+          "text": "「……光秀。貴様ほどの男が、なぜ勝算の薄い謀反に走った。四国の一件か、それとも京の公家どもに唆されたか」",
+          "voice": "voice_nobunaga_umu",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "mitsuhide_injured", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "明智光秀",
-          "text": "「上様。貴方様は、あまりにも速すぎました」",
+          "text": "「どちらも引き金に過ぎませぬ。……上様、貴方様はあまりにも速すぎました」",
+          "voice": "voice_mitsuhide_calm",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "mitsuhide_injured", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「何？」",
+          "text": "「速すぎる、だと？」",
+          "voice": "voice_nobunaga_nani",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "mitsuhide_injured", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "明智光秀",
-          "text": "「古い神仏を焼き、民も家臣も休ませぬまま次の戦へ駆り立てる……。このままでは日ノ本は修羅の獄となり、やがて南蛮の黒船に国ごと呑まれます」",
+          "text": "「比叡山を焼き、本願寺を砕き、古い神仏も公家の権威もすべて灰にされた。乱世を終わらせるには、確かに貴方様という『炎』が必要でした。……だが上様、火は燃やすものが尽きれば、次は何を焼きますか？」",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "mitsuhide_injured", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": true
+            }
           ]
+        },
+        {
+          "speaker": "",
+          "text": "雨粒が光秀の蒼白い頬を伝い落ちる。その瞳には怨恨ではなく、底知れぬ哀しみと覚悟が宿っていた。"
         },
         {
           "speaker": "明智光秀",
-          "text": "「私はただ、一度でいいから――『人間としての信長様』を止めたかったのです」"
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「……愚かな。南蛮の波を恐れるならなおさら、旧き世を叩き壊して誰よりも速く走るしかなかったのだ」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "mitsuhide_injured", "pos": "right", "active": false }
-          ]
+          "text": "「このままでは平和な世になっても貴方様は止まれぬ。いずれ海の向こうの明へ兵を出し、民も家臣も休ませぬまま日ノ本を焼き尽くすでしょう。……だからこそ、貴方様の偉大さも恐ろしさも一番近くで見てきた私が、自らの手で『第六天魔王』の介錯を務めねばならなかったのです。それが私なりの、最後の忠義にございました」",
+          "voice": "voice_mitsuhide_resolve"
         },
         {
           "speaker": "",
-          "text": "だがその問いは、冷たい雨と共に俺の胸の奥に重い澱を残した。その時、本陣の幕を荒々しく押し開ける音が響く。"
-        },
-        {
-          "speaker": "羽柴秀吉",
-          "text": "「上様っ！ 筑前守、只今馳せ参じましたぞ！ ご無事で、本当にお無事で何よりにございまする！」",
-          "se": "curtain_open",
+          "text": "言葉を失った。こいつは俺を憎んで本能寺を襲ったのではない。俺という『破壊者』が平和な時代の中で孤立し、食い潰されていく未来を恐れたのだ。――そしてその代償として、俺の息子・信忠まで奪ったのだ。",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "hideyoshi_tears", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "泥にまみれ、地面に額を擦りつけて号泣する猿の顔。だが、俺は冷ややかにその頭上を見下ろした。"
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「顔を上げよ、猿。備中からここまで、まるで俺が死ぬと予期していたかのような見事な速さだな」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "hideyoshi_tears", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "一瞬、秀吉の肩がピクリと強張った。涙を拭って顔を上げたその瞳から、卑屈な道化の色が消えている――『あと数日遅ければ、わしが天下人だったのに』という底知れぬ野心の光が。",
-          "bgm": "suspense_discord",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "hideyoshi_normal", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "光秀は俺の『速さ』を恐れ、秀吉は俺の『死』を好機と見た。（生き延びたこの命で、俺は次に何を斬り、何を選ぶ――？）",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "hideyoshi_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": false
+            }
           ]
         }
       ],
-      "choicePrompt": "羽柴秀吉「上様、逆賊・光秀の首を刎ね、すぐさま天下の総仕上げへ参りましょう！」",
+      "choicePrompt": "明智光秀「さあ、お斬りくだされ、上様。私の首をもって、貴方様の道が正しかったと証明なされませ」",
       "choices": [
         {
-          "label": "光秀を斬り、秀吉の野心も今ここで叩き潰す",
-          "sub": "裏切りも野心も一切許さず、冷徹な「第六天魔王」として日ノ本を制圧する",
+          "label": "戯れ言を吐くな！ 信忠を奪った逆賊の言い訳など聞く耳は持たぬ！",
+          "sub": "怒りのまま光秀の問いを完全に否定し、一刀両断に斬り捨てる",
+          "target": "routeA_05"
+        },
+        {
+          "label": "……認めてやろう、光秀。俺が「壊すこと」しか知らぬ魔王だったことはな",
+          "sub": "怒りを呑み込み、光秀の問いの正しさを認めた上で「その先の答え」を見出すと誓う",
+          "set_flag": "understood_mitsuhide",
+          "target": "routeA_05"
+        }
+      ]
+    },
+    "routeA_05": {
+      "chapter": "覇道篇・五",
+      "title": "猿の涙と天下の岐路",
+      "location": "天正十年 六月十三日 夕刻 ― 山崎・本陣",
+      "bg": "bg_yamazaki_camp",
+      "bgm": "suspense_discord",
+      "effect": "rain",
+      "lines": [
+        {
+          "speaker": "羽柴秀吉",
+          "text": "「上様っ！ 筑前守、備中より昼夜兼行で只今馳せ参じましたぞ！ ご無事で、本当にお無事で何よりにございまする！」",
+          "voice": "voice_hideyoshi_tears",
+          "se": "curtain_open",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "hideyoshi_tears",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "泥まみれの具足のまま、羽柴秀吉が転がり込むようにして地面へ額を擦りつけた。備中高松城からわずか十日足らず。常識を完全に逸脱した『中国大返し』の行軍速度だった。"
+        },
+        {
+          "speaker": "",
+          "text": "大粒の涙を流して歓喜する猿の顔。だが、俺は凍りつくような違和感に気づいた。平伏する直前、秀吉の瞳の奥に一瞬だけ走った、氷のように冷たく合理的な光。"
+        },
+        {
+          "speaker": "",
+          "text": "それは単なる下剋上の欲ではない。俺から徹底的な合理主義を学び、俺以上に冷徹に進化した『最高傑作の弟子』の計算だった。（――上様、なぜ生きておられたのですか。ここで死んでくだされば、私がすべてを丸く収められたものを――）",
+          "se": "ringing_ears",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "hideyoshi_tears",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "光秀は俺の『速さ』を恐れ、秀吉は俺の『死』を前提に新時代を設計し終えている。信忠を失い、蘭丸を失った今、生き延びたこの命で俺はどの未来を切り拓く――？"
+        }
+      ],
+      "choicePrompt": "羽柴秀吉「上様、逆賊の残党狩りと天下の総仕上げ、すべてこの秀吉にお任せくだされ！」",
+      "choices": [
+        {
+          "label": "秀吉の野心を今ここで叩き潰す。逆らう者は誰であろうと許さぬ",
+          "sub": "かつて以上の恐怖と絶対権力で日ノ本をねじ伏せる",
           "target": "end_01"
         },
         {
-          "label": "光秀の問いを受け止め、日ノ本の先にある「世界」へ目を向ける",
-          "sub": "島国の覇権を家臣に譲り、南蛮船団を率いて大海原へと乗り出す",
+          "label": "日ノ本の統治はお前たちに譲る。俺はこの島国の先にある「世界」へ出る",
+          "sub": "狭い島国の覇権争いに見切りをつけ、弥助と共に南蛮船団で海へ乗り出す",
           "target": "end_02"
+        },
+        {
+          "label": "光秀を生かし、家康と秀吉を両輪に据える――「信長一代で終わらぬ国」を創る",
+          "sub": "【真ルート解放】破壊者の宿命を越え、宿敵・盟友・野心家すべてを新体制へ組み込む",
+          "require_flags": [
+            "saved_ieyasu",
+            "understood_mitsuhide"
+          ],
+          "is_true_route": true,
+          "target": "end_05_true"
         }
       ]
     },
@@ -524,53 +950,63 @@
       "lines": [
         {
           "speaker": "",
-          "text": "山崎の陣で、俺はまず光秀の首を刎ねた。そして翌月、中国大返しの功を誇る秀吉を安土城へ呼び出し、すべての兵権を剥奪して辺境の蝦夷地へと追放した。",
+          "text": "山崎の陣で、俺はまず光秀の首を刎ねた。そして翌月、中国大返しの功を誇る秀吉を安土城へ呼び出し、すべての兵権を取り上げて辺境の蝦夷地へと追放した。",
           "se": "sword_slash",
           "sprites": []
         },
         {
           "speaker": "",
-          "text": "異を唱えた柴田勝家も、他の宿老たちも、生き返った魔王の眼光の前にはただ平伏するしかなかった。"
-        },
-        {
-          "speaker": "",
-          "text": "本能寺から三年。日ノ本はかつてない速さで統一され、巨大な石垣の城と鉄砲工場が列島を覆い尽くした。"
+          "text": "異を唱えた柴田勝家も、他の宿老たちも、生き返った魔王の眼光の前にはひれ伏すしかなかった。"
         },
         {
           "speaker": "織田信長",
-          "text": "「見よ、弥助。月下に広がるこの国に、もはや俺に逆らう者は一人もおらぬ」",
+          "text": "「見よ、弥助。日ノ本に逆らう者は、もう一人もおらぬ」",
+          "voice": "voice_nobunaga_umu",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "弥助",
-          "text": "「はっ。すべては上様の御心のままに。されど……今宵の天守は、いささか寒うございますな」",
+          "text": "「はっ。すべては上様の御心のままに」",
+          "voice": "voice_yasuke_loyal",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "yasuke_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
-          "speaker": "織田信長",
-          "text": "「……ふっ。魔王の座とは、そういうものだ」",
+          "speaker": "",
+          "text": "本能寺から三年。日ノ本はかつてない速さで統一され、巨大な城と鉄砲工場が列島を覆い尽くした。誰も逆らわず、誰も裏切らない、完璧な秩序の国。ただ、信忠や蘭丸と笑い合ったような温もりだけは、二度とこの城に戻ることはなかった。",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
-        },
-        {
-          "speaker": "",
-          "text": "誰も裏切らず、誰も囁かない完璧な秩序の国。南蛮の艦隊すら寄せ付けぬ鉄血の砦が、ついに完成したのだ。"
-        },
-        {
-          "speaker": "",
-          "text": "ただ――あの暁に炎の向こうへ置いてきた蘭丸の笑顔と、人間らしい温もりだけは、二度とこの城に戻ることはなかった。"
-        },
-        {
-          "speaker": "",
-          "text": "冷たい月光の下、第六天魔王はたった一人、天下の頂で静かに目を閉じた。"
         }
       ],
       "ending": {
@@ -587,6 +1023,7 @@
       "bg": "bg_sakai_galleon",
       "bgm": "ending_voyage",
       "effect": "sunbeams",
+      "ambient": "ocean_waves",
       "lines": [
         {
           "speaker": "",
@@ -596,63 +1033,49 @@
         },
         {
           "speaker": "",
-          "text": "俺は日ノ本の統治を秀吉と勝家に委ね、織田の財宝をすべて投じて堺の港に十隻の巨大ガレオン船を建造させた。"
-        },
-        {
-          "speaker": "今井宗久",
-          "text": "「いやはや、本当に海を渡られるとは。約束の黄金の羅針盤と最新の世界図、しかとお渡しいたしましたぞ」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "sokyu_fan", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「世話になったな、宗久。あとは秀吉の猿をうまく手綱で操っておけ」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "sokyu_fan", "pos": "right", "active": false }
-          ]
+          "text": "俺は日ノ本の統治を秀吉と勝家に委ね、全財産を投じて堺の港に十隻の巨大ガレオン船を建造させた。"
         },
         {
           "speaker": "弥助",
-          "text": "「上様！ 南蛮の航海士たちが帆を張り終えました。風は最高にございます！」",
+          "text": "「上様！ 南蛮の航海士たちが準備を終えました。風は最高にございます！」",
+          "voice": "voice_yasuke_joy",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "yasuke_joy", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
           "text": "「ふっ、光秀の奴が草葉の陰で目を丸くしていよう。――抜錨せよ！」",
+          "voice": "voice_nobunaga_laugh",
           "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_joy", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「日ノ本など、世界のほんの片隅に過ぎぬ！ ルソンも、天竺も、イスパニアも――この俺が、その目で確かめてくれるわ！」"
-        },
-        {
-          "speaker": "弥助",
-          "text": "「はい！ どこまでもお供いたします、我が主よ！」",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": false },
-            { "id": "yasuke_joy", "pos": "right", "active": true }
-          ]
+          "text": "「日ノ本など、世界のほんの片隅に過ぎぬ！ ルソンも、天竺も、南蛮の都も――この俺が、その目で確かめてくれるわ！」"
         },
         {
           "speaker": "",
-          "text": "本能寺で一度死んだ男は、蘭丸の遺した命を胸に海を渡り、新たな伝説となった。",
-          "sprites": [
-            { "id": "nobunaga_normal", "pos": "left", "active": true },
-            { "id": "yasuke_joy", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "水平線の彼方へ突き進む船首で、第六天魔王はかつてないほど自由に笑っていた。"
+          "text": "本能寺で一度死んだ男は、海を渡り、新たな伝説となった。水平線の彼方へ突き進む船首で、第六天魔王はかつてないほど自由に笑っていた。"
         }
       ],
       "ending": {
@@ -662,81 +1085,518 @@
         "subtitle": "【ロマンエンド】島国の覇権を捨て、未知の世界へ船出した新伝説"
       }
     },
+    "end_05_true": {
+      "chapter": "真・終幕",
+      "title": "天命の継承者",
+      "location": "天正十年 六月十三日 夕刻 ― 山崎・本陣",
+      "bg": "bg_yamazaki_camp",
+      "bgm": "sorrow_confrontation",
+      "effect": "rain",
+      "lines": [
+        {
+          "speaker": "羽柴秀吉",
+          "text": "「上様、早く逆賊・明智光秀の首を刎ね、天下へ織田の威光をお示しくだされ！」",
+          "voice": "voice_hideyoshi_cunning",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "hideyoshi_tears",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「――待て、秀吉。光秀は斬らぬ」",
+          "voice": "voice_nobunaga_umu",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "hideyoshi_tears",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "羽柴秀吉",
+          "text": "「なっ……！ 上様、御乱心なされましたか！？ 光秀は本能寺で上様を襲い、信忠様まで死に追いやった大逆賊にございますぞ！」",
+          "voice": "voice_hideyoshi_shock",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "hideyoshi_tears",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「世間には『明智光秀は山崎の戦場で討ち死にし、首は炎で焼けて判別不能となった』と触れを出せ。……明智日向守光秀という武士は、今日この雨の中で死んだのだ」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "明智光秀",
+          "text": "「上様……それは、いかなるおつもりですか」",
+          "voice": "voice_mitsuhide_sorrow",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「貴様は俺に言ったな。『壊すことしか知らぬ炎は、やがて国を焼き尽くす』と。――ならば貴様、名を捨てて生き恥を晒し、俺が壊した焼け跡に『法と秩序の新しい国』を築く手伝いをしろ。それが、信忠を奪った貴様への終身の刑罰だ」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "mitsuhide_injured",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "光秀の瞳から、初めて静かな涙が一筋こぼれ落ち、泥の上に吸い込まれていった。"
+        },
+        {
+          "speaker": "",
+          "text": "本能寺の変から五年。安土城の天守から見下ろす琵琶湖の向こうには、戦火の煙はもう一本も上がっていない。",
+          "location": "天正十五年 春 ― 安土城・天守閣",
+          "bg": "bg_azuchi_throne",
+          "bgm": "ending_voyage",
+          "effect": "sunbeams",
+          "ambient": "none",
+          "se": "temple_bell",
+          "flash": "white",
+          "sprites": []
+        },
+        {
+          "speaker": "",
+          "text": "あの日、伊賀越えの窮地を救った徳川家康は、深い恩義と信頼をもって東国の守りとなり、武の秩序を盤石に固めた。桁外れの実行力を持つ羽柴秀吉は、俺の目の届く大坂の総督として西国の開拓と巨大な商業都市の建設にその野心を注ぎ込んでいる。"
+        },
+        {
+          "speaker": "",
+          "text": "今井宗久は堺の船団を率いて世界の海と日ノ本を繋ぎ、そして京の奥では――『南光坊』と名を変えた白髪の黒衣の僧が、武士と朝廷と民が争わずに済む新しい法度を書き上げていた。"
+        },
+        {
+          "speaker": "弥助",
+          "text": "「上様。家康殿、秀吉殿、そして京の黒衣の御坊より、春の評定の書状がすべて届いております」",
+          "voice": "voice_yasuke_joy",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「そうか。……もはや俺が刀を抜かずとも、この国は回るようになったな」",
+          "voice": "voice_nobunaga_quiet",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "俺は縁側へ進み、二つの小さな盃に酒を注いだ。一つは本能寺の炎の中で笑って散った小姓のために。もう一つは、二条御所で父の名を守って散った嫡男のために。"
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「見ているか、信忠。蘭丸。……『第六天魔王』一代で終わるはずだった国は、お前たちの死を糧にして、百年先へ続く新しい日ノ本へ生まれ変わったぞ」"
+        },
+        {
+          "speaker": "弥助",
+          "text": "「……きっと、お二人とも笑っておられますな、上様」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「ああ。……さあ弥助、そろそろ俺も隠居の支度をするか。お前の故郷の海とやらを、一度この目で見に行かねばならぬからな」",
+          "sprites": [
+            {
+              "id": "nobunaga_normal",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_joy",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "安土の天守を吹き抜ける春の風が、黒と金のマントを優しく揺らす。本能寺の灰の中から這い上がった覇王は、破壊者としての宿命を乗り越え、ついに『戦国の終わり』をその手で見届けたのだった。"
+        }
+      ],
+      "ending": {
+        "id": "END_5_TRUE",
+        "number": "伍",
+        "title": "天命の継承者",
+        "subtitle": "【真エンド】破壊の炎を越え、宿敵・盟友・野心家すべてを束ねて百年続く新時代の礎を築いた真の結末"
+      }
+    },
     "routeB_01": {
       "chapter": "暗躍篇・一",
       "title": "亡霊の茶室",
-      "location": "天正十年 六月十四日 ― 堺・今井宗久の隠し屋敷",
+      "location": "天正十年 六月三日 ― 堺・今井宗久の隠し屋敷",
       "bg": "bg_sakai_tearoom",
       "bgm": "mystery_koto",
       "effect": "none",
       "lines": [
         {
           "speaker": "",
-          "text": "本能寺の炎を逃れた俺と弥助は、京の商人の手引きで自由都市・堺へと潜伏した。茶の師であり鉄砲と南蛮貿易の盟友でもある、豪商・今井宗久の隠し屋敷。",
+          "text": "本能寺と二条御所の炎を背に、俺と弥助は京の町衆の手引きで自由都市・堺へ身を潜めた。匿われたのは、俺の茶の師であり、鉄砲と火薬を一手に担ってきた豪商・今井宗久の隠し茶室。",
           "se": "shishi_odoshi",
           "sprites": []
         },
         {
-          "speaker": "",
-          "text": "世間では『織田信長は本能寺の灰と消えた』と信じ込まれ、俺は名のなき浪人として、日ノ本が激変していく様をただ静かに眺めていた。"
-        },
-        {
           "speaker": "今井宗久",
-          "text": "「――本日の早馬にございます、上様。昨日、山崎にて羽柴筑前守殿が明智光秀を討ち取りました」",
+          "text": "「一服、どうぞ。……まさか天下の織田上総介様が、このような狭い四畳半で『死人』になられるとは、世の中とは分からぬものにございますな」",
+          "voice": "voice_sokyu_calm",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "sokyu_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "sokyu_normal",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「……早いな。備中で毛利と戦っていたはずの猿が、わずか十日余りで戻ったか」",
+          "text": "「……宗久。俺が生きていると明智へ密告すれば、堺の自治も莫大な褒美も手に入ったはずだ。なぜ匿った」",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "sokyu_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "sokyu_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "今井宗久",
-          "text": "「それだけではございませぬ。秀吉殿はすでに『上様の仇を討った唯一の忠臣』と名乗り、丹羽様や池田様を取り込んで織田家の実権を握りつつあります」",
+          "text": "「ふふ……明智殿では、器が古すぎますゆえ。明智殿は『武士と朝廷の世』を守ろうとされた。ですが上様、貴方様は楽市楽座で古い座を壊し、銭と鉄砲が槍より強い時代を創ってくださった」",
+          "voice": "voice_sokyu_smirk",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "sokyu_fan", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "今井宗久",
-          "text": "「柴田勝家様とは一触即発の有様。……まるで、最初からこうなる筋書きを書いていたかのような手際でございますな」"
-        },
-        {
-          "speaker": "弥助",
-          "text": "「上様！ 今すぐ堺の鉄砲衆を率いて京へ上りましょう。上様が生きておられると知れば、秀吉殿もひれ伏すはず！」",
-          "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "yasuke_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "sokyu_fan",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「慌てるな、弥助。死んだはずの主君を前に、忠臣の仮面がどこまで剥がれるか――もう少し見物させろ」",
+          "text": "「ほう。俺の『破壊』に投資したというわけか」",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "sokyu_fan",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "今井宗久",
+          "text": "「ええ。そして今、上様が『死んだ』ことになったのは願ってもない好機にございます。表の戦は武士どもに勝手にやらせておけばよい。血を流し合って疲弊した末に最後に笑うのは、武器と金と南蛮船を握る者――そうは思われませぬか、上様？」",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "sokyu_fan",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "俺は茶碗の底に映る己の顔を見つめ、静かに茶を啜った。苦味が、やけに心地よかった。"
-        },
-        {
-          "speaker": "",
-          "text": "やがて織田家の後継を決める会議が尾張・清洲で開かれると聞き、俺たちは闇に紛れて故郷へと向かった。"
+          "text": "こいつはただの御用商人ではない。武士の時代そのものを銭で呑み込もうとしている怪物だ。だが、その冷徹な視座が、今の俺には妙に心地よかった。",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "sokyu_fan",
+              "pos": "right",
+              "active": false
+            }
+          ]
         }
       ],
       "next": "routeB_02"
     },
     "routeB_02": {
       "chapter": "暗躍篇・二",
+      "title": "すれ違う影",
+      "location": "天正十年 六月四日 夜 ― 堺・港近くの路地裏",
+      "bg": "bg_kiyosu_inn",
+      "bgm": "tension_low",
+      "effect": "moonlight",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "潜伏から二日後の夜。堺の港近くで情報収集をしていた俺と弥助は、路地裏の闇の中で異様な一団と鉢合わせた。平服のまま刀の柄を握りしめる三十人ほどの武士たち。その中心にいる男の横顔を見た瞬間、俺は息を呑んだ。（――徳川家康か！）",
+          "se": "armor_march",
+          "sprites": []
+        },
+        {
+          "speaker": "徳川家康",
+          "text": "「……追手が堺の南口を塞いだか。本多忠勝、服部半蔵、もはや海路は絶たれた。このまま山深い伊賀路を抜けて三河へ戻るぞ！」"
+        },
+        {
+          "speaker": "徳川家康",
+          "text": "「信長殿は本能寺で、信忠殿も二条で討たれたのだ。恩ある同盟者の仇を討つため、わしは這ってでも生きて三河へ帰らねばならん！」",
+          "voice": "voice_ieyasu_resolve"
+        },
+        {
+          "speaker": "弥助",
+          "text": "「上様……家康殿の後ろから、明智の追手と野盗の群れが迫っております。このままでは堺を出る前に討たれますぞ！」",
+          "voice": "voice_yasuke_urgent",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "二十年来、一度も裏切らなかった唯一の盟友。闇に紛れて追手を足止めすれば、家康は確実に伊賀路へ逃げ込める。――だが、動けば俺の生存が露見する危険を冒すことになる。",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "choicePrompt": "弥助「上様、ご決断を。追手の松明はもう目と鼻の先です！」",
+      "choices": [
+        {
+          "label": "顔を隠したまま追手の退路を塞げ。家康をここで死なせるわけにはいかぬ",
+          "sub": "弥助と共に闇夜から奇襲をかけ、名乗らずに家康一行の脱出を援護する",
+          "set_flag": "shadow_saved_ieyasu",
+          "target": "routeB_03"
+        },
+        {
+          "label": "動くな、弥助。死んだはずの亡霊が、今さら生者に手を貸すな",
+          "sub": "冷徹に気配を殺し、窮地に陥る盟友の背中を闇の中からただ見送る",
+          "target": "routeB_03"
+        }
+      ]
+    },
+    "routeB_03": {
+      "chapter": "暗躍篇・三",
+      "title": "主君なき勝利",
+      "location": "天正十年 六月十四日 ― 堺・今井宗久の隠し屋敷",
+      "bg": "bg_sakai_tearoom",
+      "bgm": "mystery_koto",
+      "effect": "rain",
+      "lines": [
+        {
+          "speaker": "",
+          "text": "天正十年、六月十四日。雨が堺の屋根を叩く昼下がり。隠し茶室の障子が開き、今井宗久が一通の書状を畳の上へ滑らせた。",
+          "se": "shishi_odoshi",
+          "sprites": []
+        },
+        {
+          "speaker": "今井宗久",
+          "text": "「――勝負は決しました、上様。昨日、山崎の合戦にて羽柴筑前守殿が明智光秀の軍勢を撃破。敗走した光秀は小栗栖にて落ち武者狩りの槍に貫かれ、すでに首を晒されたそうにございます」",
+          "voice": "voice_sokyu_calm",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "sokyu_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「……そうか。光秀が、死んだか」",
+          "voice": "voice_nobunaga_quiet",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "sokyu_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        },
+        {
+          "speaker": "",
+          "text": "胸の奥に広がったのは、復讐を果たした安堵ではなかった。言いようのない、冷たく乾いた虚無感だった。俺が一歩も動かず、一本の槍も振るわないまま――俺の仇討ちは、秀吉の手によって完璧に完遂されてしまったのだ。"
+        },
+        {
+          "speaker": "今井宗久",
+          "text": "「秀吉殿はすぐさま『信長様の遺志を継ぐ唯一の忠臣』として諸大名の心を掴みました。柴田勝家様とは一触即発ですが、時の勢いは完全に羽柴殿に傾いております」",
+          "voice": "voice_sokyu_smirk",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "sokyu_fan",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "弥助",
+          "text": "「上様！ 今すぐ堺の鉄砲衆を借りて京へ上りましょう。上様が生きておられると知れば、秀吉殿も勝家殿もすべてひれ伏すはず！」",
+          "voice": "voice_yasuke_urgent",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
+        },
+        {
+          "speaker": "織田信長",
+          "text": "「……待て、弥助。本当にそうか？ 本当に俺が生き返ったら奴らは喜ぶのか。――この目で確かめてやる。織田家の後継を決める会議が、故郷・清洲で開かれるというならな」",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "next": "routeB_04"
+    },
+    "routeB_04": {
+      "chapter": "暗躍篇・四",
       "title": "清洲の夜風",
       "location": "天正十年 六月二十七日 夜 ― 尾張・清洲城下の旅籠",
       "bg": "bg_kiyosu_inn",
@@ -745,75 +1605,137 @@
       "lines": [
         {
           "speaker": "",
-          "text": "半月後。清洲会議の熱気に沸く城下町へ、俺は笠で顔を隠して足を踏み入れた。",
+          "text": "六月二十七日、夜。『清洲会議』の前夜、俺は深編笠で顔を隠し、故郷・尾張清洲の城下へ足を踏み入れた。古びた旅籠の一室。薄い障子一枚を隔てた隣座敷から、織田家の古参武士たちの声が漏れ聞こえてくる。",
           "sprites": []
-        },
-        {
-          "speaker": "",
-          "text": "だが、かつての膝元である尾張の酒場や宿場で耳にしたのは、俺の想像を絶する言葉だった。"
         },
         {
           "speaker": "織田家の古参武士",
-          "text": "「――正直なところ、俺は少しホッとしているよ。信長様がご存命の頃は、いつ首を刎ねられるか生きた心地がしなかった」"
+          "text": "「――おい、ここだけの話だがな。俺は正直、少しホッとしているんだよ」"
         },
         {
           "speaker": "別の武士",
-          "text": "「まったくだ。羽柴様の方が話がわかる。誰もが心の中で『もう戻ってきてくれるな』と願っているのさ」"
+          "text": "「……わかるぞ。信長様がご存命の頃は、いつ些細な落ち度で首を刎ねられるか、毎晩生きた心地がしなかったからな」"
+        },
+        {
+          "speaker": "織田家の古参武士",
+          "text": "「まったくだ。今度の天下人は羽柴様の方がずっと話がわかる。先ほど羽柴様から諸将へ回った密命、聞いたか？ 『信長様の生存を騙る不届き者が現れたら、本物か偽物か確かめるまでもなく、その場で問答無用で斬り捨てよ』とな」"
         },
         {
           "speaker": "",
-          "text": "胸の奥が冷たく凍りつく中、旅籠の裏庭を歩く一団の気配が近づいた。提灯の明かりの下にいたのは――羽柴秀吉その人だった。"
-        },
-        {
-          "speaker": "羽柴秀吉",
-          "text": "「念を押しておくぞ。万が一、本能寺を生き延びた『本物』が現れても構わぬ。明智の残党が仕立てた偽者として、問答無用でその場で斬り捨てよ」",
-          "bgm": "silence",
-          "se": "ringing_ears",
-          "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "hideyoshi_normal", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "",
-          "text": "頭を鈍器で殴られたような衝撃だった。秀吉は俺が生きている可能性に気づいた上で――『生き返った信長は偽物として殺せ』と命じたのだ。",
-          "sprites": []
+          "text": "頭を鈍器で殴られたような衝撃が走った。秀吉は俺が生き延びている可能性に気づいていたのだ。その上で――『生き返った信長は偽物として殺せ』と、俺自身が育てた家臣たちに命じたのだ。",
+          "se": "ringing_ears"
         },
         {
           "speaker": "弥助",
-          "text": "「上様……！ 秀吉殿は、最初から上様を『亡き者』として歴史から消すつもりで動いていたのです！」",
+          "text": "「上様……！ 秀吉殿は、最初から上様を歴史から消し去るつもりで手を打っていたのです！」",
+          "voice": "voice_yasuke_urgent",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "yasuke_combat", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
           "text": "「……ふっ。はははははっ！」",
+          "voice": "voice_nobunaga_laugh",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "笑いが込み上げてきた。光秀は俺を殺そうとし、秀吉は俺を歴史から消し去ろうとし、家臣たちは俺の死に安堵している。"
+          "text": "乾いた笑いが喉の奥から溢れ出た。光秀は俺を殺そうとし、秀吉は俺を歴史から消し去ろうとし、家臣たちは俺の死に安堵している。俺が命を削って創り上げた天下に、もはや『織田信長』の座る椅子など、どこにも残されていなかったのだ。"
+        },
+        {
+          "speaker": "弥助",
+          "text": "「上様、一つだけ……先ほど堺の宗久殿の使いから預かった文がございます。差出人は、無事に三河へ生還された徳川家康殿とのこと」",
+          "require_flag": "shadow_saved_ieyasu",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
         },
         {
           "speaker": "",
-          "text": "俺が命を削って創り上げた天下に、もはや『織田信長』の座る椅子など、どこにも残されていなかったのだ。",
-          "bgm": "suspense_discord"
+          "text": "封を切ると、そこには署名も宛名もなく、震えるような力強い筆致でただ一行だけ記されていた。『――堺の夜霧に礼を言う。三河の門は、旧友のためいつでも開いておる』家康は、あの夜に闇から自分を救った影の正体に気づいていたのだ。",
+          "require_flag": "shadow_saved_ieyasu"
         },
         {
+          "speaker": "織田信長",
+          "text": "「……馬鹿め。三河の田舎で隠居するほど、俺は老いぼれてはおらぬよ」",
+          "voice": "voice_nobunaga_umu",
+          "require_flag": "shadow_saved_ieyasu",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
+          ]
+        }
+      ],
+      "next": "routeB_05"
+    },
+    "routeB_05": {
+      "chapter": "暗躍篇・五",
+      "title": "亡霊の決断",
+      "location": "天正十年 六月二十七日 夜 ― 尾張・清洲城下の旅籠",
+      "bg": "bg_kiyosu_inn",
+      "bgm": "suspense_discord",
+      "effect": "moonlight",
+      "lines": [
+        {
           "speaker": "",
-          "text": "影の中で真実を知ってしまった魔王に、残された道は二つだけだった。"
+          "text": "燭台の炎が小さく揺れる。影の中で残酷な真実を知ってしまった魔王に、残された道は二つだけだった。今井宗久が囁いたように名を捨てて裏から国を操る怪物となるか、怒りのまま正体を明かし裏切り者どもの喉元へ喰らいつくか――。",
+          "sprites": [
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
+          ]
         }
       ],
       "choicePrompt": "弥助「上様、ご命令を。私はどこまでもお供いたします」",
       "choices": [
         {
           "label": "「織田信長」は本能寺で死んだのだ。名もなき影としてこの国を操る",
-          "sub": "表舞台への未練を断ち、堺の財力と貿易を握る黒幕として秀吉を裏から支配する",
+          "sub": "表舞台への未練を断ち、今井宗久と共に堺の財力と南蛮貿易を握る黒幕となる",
           "target": "end_03"
         },
         {
@@ -833,57 +1755,47 @@
       "lines": [
         {
           "speaker": "",
-          "text": "あの日、俺は『織田信長』という名前を尾張の夜風に捨てた。堺へ戻った俺は今井宗久と組み、全国の鉄砲・火薬・南蛮船の流通を完全に掌握した。",
+          "text": "あの日、俺は『織田信長』という名前を尾張の夜風に捨てた。堺へ戻った俺は、今井宗久と組んで日本最大の貿易商団を築き上げ、全国の鉄砲・火薬・南蛮船の流通を完全に掌握した。",
           "se": "abacus_coins",
           "sprites": []
         },
         {
-          "speaker": "今井宗久",
-          "text": "「旦那様、大坂の豊臣殿よりまたぞろ嘆願書でございますな。『次の出兵に向けて、さらなる資金と大筒を融通願いたい』と」",
-          "sprites": [
-            { "id": "nobunaga_broker", "pos": "left", "active": false },
-            { "id": "sokyu_fan", "pos": "right", "active": true }
-          ]
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「ふっ、天下人になったつもりで、金も武器も俺の掌の上か。――伝えてやれ。利子は三割増し、博多と長崎の交易権を担保に取れ、とな」",
-          "sprites": [
-            { "id": "nobunaga_broker", "pos": "left", "active": true },
-            { "id": "sokyu_fan", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "今井宗久",
-          "text": "「相変わらず手厳しいことで。されど、それでこそ『お館様』でございますな」"
-        },
-        {
           "speaker": "弥助",
-          "text": "「旦那様、長崎より黒船の積荷目録が届いております。南蛮の最新式大砲も二十門、確保いたしました」",
+          "text": "「旦那様、大坂の羽柴殿より急使が参っております。『次の朝鮮出兵に向けて、さらなる資金と大筒の融通をお願いしたい』とのこと」",
+          "voice": "voice_yasuke_loyal",
           "sprites": [
-            { "id": "nobunaga_broker", "pos": "left", "active": false },
-            { "id": "yasuke_normal", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_broker",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「上出来だ、弥助。今宵は久しぶりに、堺の酒でも酌み交わそうか」",
+          "text": "「ふっ、天下人になったつもりで、金も武器も俺の掌の上か。――伝えてやれ。利子を三割増しにするなら貸してやろう、とな」",
+          "voice": "voice_nobunaga_laugh",
           "sprites": [
-            { "id": "nobunaga_broker", "pos": "left", "active": true },
-            { "id": "yasuke_normal", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_broker",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_normal",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "表の歴史書には『豊臣秀吉が天下を統一した』と記されるだろう。だが、その天下人に金を貸し、外交と海路を牛耳っているのは、死んだはずのこの俺だ。"
-        },
-        {
-          "speaker": "",
-          "text": "王座の孤独からも、暗殺の刃からも解き放たれ、俺はかつて夢見た以上に自由だった。"
-        },
-        {
-          "speaker": "",
-          "text": "誰にも縛られず、誰にも知られぬ『影の覇王』として、俺は新しい時代の糸を引き続ける。"
+          "text": "表の歴史書には『豊臣秀吉が天下を統一した』と記されるだろう。だが、その秀吉に金を貸し、外交を操り、世界の海と日ノ本を繋いでいるのは、死んだはずのこの俺だ。誰にも縛られず、誰にも狙われない『影の覇王』として、俺は新しい時代の糸を引き続ける。"
         }
       ],
       "ending": {
@@ -904,59 +1816,66 @@
         {
           "speaker": "織田信長",
           "text": "「ハハハハッ！ 来い、猿！ 丹羽！ 池田！ 貴様ら全員、この俺が取り立ててやった犬どもではないか！」",
+          "voice": "voice_nobunaga_laugh",
           "se": "armor_march",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "俺は『織田信長』を名乗り、清洲の宿坊で兵を挙げようとした。だが、『信長を騙る逆賊を討て』という秀吉の号令のもと、数万の織田軍が宿坊を包囲したのだ。"
-        },
-        {
-          "speaker": "",
-          "text": "周囲を取り囲む無数の槍と鉄砲。掲げられた旗は水色の桔梗ではない――かつて俺が与えた織田木瓜と、五七桐の旗印だった。"
+          "text": "俺は『織田信長』を名乗り、弥助と共に清洲の宿坊で兵を挙げようとした。だが集まったのは味方ではなかった。『信長を騙る逆賊を討て』という秀吉の号令のもと、数万の織田軍が宿坊を幾重にも取り囲んだのだ。"
         },
         {
           "speaker": "弥助",
-          "text": "「上様、お下がりください！ 私が血路を開きます！ この弥助が命に代えても――！」",
+          "text": "「上様、お下がりください！ この弥助が命に代えても――！」",
+          "voice": "voice_yasuke_urgent",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": false },
-            { "id": "yasuke_combat", "pos": "right", "active": true }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": true
+            }
           ]
         },
         {
           "speaker": "織田信長",
-          "text": "「下がるな、弥助！ 異国の海から来た貴様だけが、最後まで俺の『信長』であったな」",
+          "text": "「下がるな、弥助！ 最後まで俺の隣で暴れろ！」",
+          "voice": "voice_nobunaga_rage",
           "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
-          ]
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「最後まで俺の隣で暴れろ！ 魔王の死に様、奴らの目に焼き付けてやるわ！」"
-        },
-        {
-          "speaker": "",
-          "text": "（光秀一人ではなかったのだ。俺自身が急ぎすぎ、創り替えたこの時代そのものが、もう織田信長を不要としていたのか――）"
-        },
-        {
-          "speaker": "",
-          "text": "四方から迫る数百挺の火縄の赤い光。その向こうに、本能寺の暁で微笑んだ蘭丸の面影がふと重なった。"
-        },
-        {
-          "speaker": "織田信長",
-          "text": "「是非に及ばず――いや、実に痛快な一生であった！」",
-          "sprites": [
-            { "id": "nobunaga_ronin", "pos": "left", "active": true },
-            { "id": "yasuke_combat", "pos": "right", "active": false }
+            {
+              "id": "nobunaga_ronin",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "yasuke_combat",
+              "pos": "right",
+              "active": false
+            }
           ]
         },
         {
           "speaker": "",
-          "text": "轟音と共に紅蓮の炎が宿坊を飲み込んだ。本能寺のあの日から数週間――俺は確かに生き延び、そして今、本当の意味で『織田信長』の時代が終わったのだ。",
+          "text": "周囲を取り囲む無数の槍と鉄砲。旗印は水色の桔梗ではない。かつて俺が与えた、俺自身の家臣たちの旗印だった。（光秀一人ではなかったのだ。俺が創ったこの時代そのものが、俺を拒絶していたのか――）"
+        },
+        {
+          "speaker": "",
+          "text": "燃え落ちる天井を見上げながら、俺は不思議なほど穏やかな気持ちで目を閉じた。本能寺のあの日から数週間――俺は確かに生き延び、そして今、本当の意味で『織田信長』の時代が終わったのだ。",
           "se": "gun_volley",
           "shake": true,
           "flash": "red",

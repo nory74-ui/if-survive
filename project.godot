@@ -31,13 +31,8 @@ environment/defaults/default_clear_color=Color(0.0431373, 0.0431373, 0.054902, 1
 
 [autoload]
 
-
-
-
-
-
-
 GameManager="*res://scripts/game_manager.gd"
+SoundManager="*res://scripts/sound_manager.gd"
 
 
 

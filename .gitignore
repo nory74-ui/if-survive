@@ -19,3 +19,13 @@ if_survive_save.json
 build/
 dist/
 export/
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]

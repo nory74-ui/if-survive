@@ -201,6 +201,7 @@ var _ep_menu_host: VBoxContainer
 var _skip_button: Button
 var _record_button: Button
 var _settings_hud_button: Button
+var _mute_hud_button: Button
 var _read_badge: Label
 var _shortcut_hint: Label
 var _se_pool: Array[AudioStreamPlayer] = []
@@ -219,6 +220,8 @@ func _ready() -> void:
 
 	_load_save_data()
 	_init_default_episode_context()
+	_apply_live_audio_volumes()
+	_update_mute_button_visual()
 	_qol_overlays.set_scenes(_scenes, _current_episode_id)
 	_show_main_title_screen()
 
@@ -226,6 +229,21 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		_save_store.flush_if_dirty()
+
+
+func _exit_tree() -> void:
+	if _bgm_tween != null and _bgm_tween.is_valid():
+		_bgm_tween.kill()
+		_bgm_tween = null
+	if _bgm_player != null:
+		_bgm_player.stop()
+		_bgm_player.stream = null
+	for p in _se_pool:
+		if p != null:
+			p.stop()
+			p.stream = null
+	_audio_cache.clear()
+	_synth_wav_cache.clear()
 
 
 func _setup_font_and_theme() -> void:
@@ -681,9 +699,9 @@ func _setup_qol_ui() -> void:
 	for b in [_continue_button, _load_menu_button, _chapter_menu_button, _gallery_button, _settings_menu_button, _portal_return_button]:
 		_style_title_menu_button(b as Button, false)
 
-	# 2. ゲーム画面 TopHUD ボタン拡充（履歴・自動・スキップ・記録・設定・タイトルへ）
+	# 2. ゲーム画面 TopHUD ボタン拡充（履歴・自動・スキップ・記録・設定・音切替・タイトルへ）
 	var hud_btns := $ShakeRoot/GameScreen/TopHUD/HudButtons as HBoxContainer
-	hud_btns.offset_left = -1080.0
+	hud_btns.offset_left = -1210.0
 	hud_btns.offset_right = -36.0
 	hud_btns.add_theme_constant_override("separation", 10)
 
@@ -699,12 +717,32 @@ func _setup_qol_ui() -> void:
 	hud_btns.add_child(_settings_hud_button)
 	hud_btns.move_child(_settings_hud_button, 4)
 
-	for b in [_backlog_button, _auto_button, _skip_button, _record_button, _settings_hud_button, _title_return_button]:
+	_mute_hud_button = _make_hud_btn("音：入")
+	hud_btns.add_child(_mute_hud_button)
+	hud_btns.move_child(_mute_hud_button, 5)
+
+	for b in [_backlog_button, _auto_button, _skip_button, _record_button, _settings_hud_button, _mute_hud_button, _title_return_button]:
 		(b as Button).add_theme_font_size_override("font_size", 22)
 		(b as Button).focus_mode = Control.FOCUS_NONE
 	_apply_hud_compact_styles()
 
-	# 3. メッセージ枠内の既読バッジ＆操作ヒントバー
+	# 3. 終幕録グリッドを5エンド対応のため縦スクロール可能にラップ
+	if _gallery_grid != null:
+		var gallery_vbox := _gallery_grid.get_parent()
+		if gallery_vbox != null:
+			var gallery_scroll := ScrollContainer.new()
+			gallery_scroll.name = "GalleryScroll"
+			gallery_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			gallery_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			gallery_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			var grid_idx := _gallery_grid.get_index()
+			gallery_vbox.add_child(gallery_scroll)
+			gallery_vbox.move_child(gallery_scroll, grid_idx)
+			_gallery_grid.reparent(gallery_scroll)
+			_gallery_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			_gallery_grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+	# 4. メッセージ枠内の既読バッジ＆操作ヒントバー
 	var spk_spacer := Control.new()
 	spk_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	spk_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -727,7 +765,7 @@ func _setup_qol_ui() -> void:
 	_shortcut_hint.add_theme_font_size_override("font_size", 17)
 	msg_vbox.add_child(_shortcut_hint)
 
-	# 4. 記録帳・章選択・設定オーバーレイ追加
+	# 5. 記録帳・章選択・設定オーバーレイ追加
 	_qol_overlays = QolOverlays.new()
 	_qol_overlays.name = "QolOverlays"
 	_qol_overlays.setup(_save_store, _scenes)
@@ -735,6 +773,7 @@ func _setup_qol_ui() -> void:
 	_shake_root.move_child(_qol_overlays, _flash_overlay.get_index())
 
 	_update_skip_button_visual()
+	_update_mute_button_visual()
 
 
 func _make_title_btn(txt: String, font_sz: int, min_h: int) -> Button:
@@ -742,6 +781,9 @@ func _make_title_btn(txt: String, font_sz: int, min_h: int) -> Button:
 	btn.text = txt
 	btn.custom_minimum_size = Vector2(570, min_h)
 	btn.add_theme_font_size_override("font_size", font_sz)
+	btn.mouse_entered.connect(func() -> void:
+		_play_sm_se("ui_hover", 0.42)
+	)
 	return btn
 
 
@@ -769,6 +811,9 @@ func _make_hud_btn(txt: String) -> Button:
 	var btn := Button.new()
 	btn.text = txt
 	btn.focus_mode = Control.FOCUS_NONE
+	btn.mouse_entered.connect(func() -> void:
+		_play_sm_se("ui_hover", 0.35)
+	)
 	return btn
 
 
@@ -776,7 +821,7 @@ func _apply_hud_compact_styles() -> void:
 	var sb_norm := _make_box_style(COLOR_SUMI, COLOR_GOLD, 1, 16, 10)
 	var sb_hov := _make_box_style(Color(0.22, 0.08, 0.09, 0.94), COLOR_GOLD, 1, 16, 10)
 	var sb_prs := _make_box_style(COLOR_CRIMSON, COLOR_GOLD, 1, 16, 10)
-	for b in [_backlog_button, _auto_button, _skip_button, _record_button, _settings_hud_button, _title_return_button]:
+	for b in [_backlog_button, _auto_button, _skip_button, _record_button, _settings_hud_button, _mute_hud_button, _title_return_button]:
 		var btn := b as Button
 		btn.add_theme_stylebox_override("normal", sb_norm)
 		btn.add_theme_stylebox_override("hover", sb_hov)
@@ -790,10 +835,16 @@ func _update_slot_pivot(slot: Control) -> void:
 
 func _connect_signals() -> void:
 	_start_button.pressed.connect(_on_start_pressed)
+	_start_button.mouse_entered.connect(func() -> void:
+		_play_sm_se("ui_hover", 0.42)
+	)
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_load_menu_button.pressed.connect(_on_open_load_menu)
 	_chapter_menu_button.pressed.connect(_on_open_chapter_menu)
 	_gallery_button.pressed.connect(_on_open_gallery_pressed)
+	_gallery_button.mouse_entered.connect(func() -> void:
+		_play_sm_se("ui_hover", 0.42)
+	)
 	_settings_menu_button.pressed.connect(_on_open_settings_pressed)
 	_portal_return_button.pressed.connect(_on_portal_return_pressed)
 
@@ -812,6 +863,7 @@ func _connect_signals() -> void:
 	_skip_button.pressed.connect(_on_skip_pressed)
 	_record_button.pressed.connect(_on_record_pressed)
 	_settings_hud_button.pressed.connect(_on_open_settings_pressed)
+	_mute_hud_button.pressed.connect(_on_mute_pressed)
 	_title_return_button.pressed.connect(_on_title_return_pressed)
 
 	_qol_overlays.save_slot_requested.connect(_on_qol_save_slot)
@@ -820,7 +872,7 @@ func _connect_signals() -> void:
 	_qol_overlays.chapter_selected.connect(_on_qol_chapter_selected)
 	_qol_overlays.settings_changed.connect(_on_settings_changed)
 	_qol_overlays.test_se_requested.connect(func() -> void:
-		_play_synth_se("ui_choice", -10.0)
+		_play_sm_se("ui_confirm", 0.85)
 	)
 	_qol_overlays.overlay_closed.connect(_on_qol_overlay_closed)
 
@@ -861,6 +913,47 @@ func _get_game_manager() -> Node:
 		_fallback_gm = GameManagerScript.new()
 		_fallback_gm.call("load_catalog")
 	return _fallback_gm
+
+
+func _get_sound_manager() -> Node:
+	return get_node_or_null("/root/SoundManager")
+
+
+func _is_sound_muted() -> bool:
+	var sm := _get_sound_manager()
+	return sm != null and bool(sm.get("muted"))
+
+
+func _set_ambient_safe(ambient_type: String) -> void:
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("set_ambient", ambient_type)
+
+
+func _play_sm_se(se_key: String, volume_scale: float = 1.0) -> void:
+	if _is_sound_muted():
+		return
+	if _save_store.get_se_gain_db() <= -79.0:
+		return
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("play_se", se_key, volume_scale)
+	else:
+		_play_synth_se(se_key, linear_to_db(clampf(volume_scale, 0.01, 1.0)))
+
+
+func _play_voice_safe(voice_key: String, volume_scale: float = 1.0) -> void:
+	if voice_key.is_empty() or _is_sound_muted():
+		return
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("play_voice", voice_key, volume_scale)
+
+
+func _stop_voice_safe() -> void:
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("stop_voice")
 
 
 func _resolve_episode_path(raw_path: String) -> String:
@@ -952,12 +1045,13 @@ func _unlock_ending(ending_id: String) -> void:
 	if ending_id.is_empty():
 		return
 	_save_store.unlock_ending(ending_id)
+	_get_game_manager().call("unlock_ending", _current_episode_id, ending_id)
 	_unlocked_endings = _save_store.unlocked_endings
 	_refresh_gallery_button_text()
 
 
 func _refresh_gallery_button_text() -> void:
-	var total := int(_meta.get("totalEndings", max(_endings_catalog.size(), 4)))
+	var total := int(_meta.get("totalEndings", max(_endings_catalog.size(), 5)))
 	_gallery_button.text = "終幕録（%d/%d）" % [_unlocked_endings.size(), total]
 
 
@@ -1087,6 +1181,7 @@ func _setup_main_title_ui() -> void:
 
 
 func _show_main_title_screen() -> void:
+	_stop_voice_safe()
 	if _transition_tween != null and _transition_tween.is_valid():
 		_transition_tween.kill()
 	if _banner_tween != null and _banner_tween.is_valid():
@@ -1134,6 +1229,7 @@ func _show_main_title_screen() -> void:
 	_main_title_particles.set_effect("embers", true)
 	_title_particles.set_effect("none", true)
 	_atmosphere_particles.set_effect("none", true)
+	_set_ambient_safe("embers")
 	_play_bgm("title_theme")
 
 	if _main_title_logo != null:
@@ -1145,7 +1241,7 @@ func _show_main_title_screen() -> void:
 
 
 func _on_open_series_select_pressed() -> void:
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
 	_show_portal_screen()
 
 
@@ -1255,6 +1351,7 @@ func _setup_portal_ui() -> void:
 
 
 func _show_portal_screen() -> void:
+	_stop_voice_safe()
 	if _transition_tween != null and _transition_tween.is_valid():
 		_transition_tween.kill()
 	if _banner_tween != null and _banner_tween.is_valid():
@@ -1302,6 +1399,7 @@ func _show_portal_screen() -> void:
 	_portal_particles.set_effect("embers", true)
 	_title_particles.set_effect("none", true)
 	_atmosphere_particles.set_effect("none", true)
+	_set_ambient_safe("embers")
 	_play_bgm("title_theme")
 	_refresh_portal_cards()
 
@@ -1378,8 +1476,9 @@ func _create_portal_episode_card(ep: Dictionary) -> Dictionary:
 
 	var status_lbl := Label.new()
 	if avail:
-		status_lbl.text = "終幕 %d / 4　|　既読章 %d" % [unlocked_cnt, visited_cnt]
-		status_lbl.add_theme_color_override("font_color", COLOR_PAPER if unlocked_cnt > 0 else COLOR_MUTED)
+		var total_ends := int(ep.get("total_endings", _get_game_manager().call("get_total_endings", ep_id)))
+		status_lbl.text = "終幕 %d / %d　|　既読章 %d" % [unlocked_cnt, total_ends, visited_cnt]
+		status_lbl.add_theme_color_override("font_color", COLOR_GOLD if unlocked_cnt >= total_ends else (COLOR_PAPER if unlocked_cnt > 0 else COLOR_MUTED))
 	else:
 		status_lbl.text = "【準備中】"
 		status_lbl.add_theme_color_override("font_color", Color(0.58, 0.55, 0.50, 0.78))
@@ -1416,6 +1515,9 @@ func _create_portal_episode_card(ep: Dictionary) -> Dictionary:
 		play_btn.add_theme_stylebox_override("normal", btn_norm)
 		play_btn.add_theme_stylebox_override("hover", btn_hi)
 		play_btn.add_theme_stylebox_override("focus", btn_hi)
+		play_btn.mouse_entered.connect(func() -> void:
+			_play_sm_se("ui_hover", 0.42)
+		)
 		play_btn.pressed.connect(_select_episode_from_portal.bind(ep, false))
 		foot.add_child(play_btn)
 
@@ -1424,6 +1526,9 @@ func _create_portal_episode_card(ep: Dictionary) -> Dictionary:
 			resume_btn.text = "栞から即再開"
 			resume_btn.custom_minimum_size = Vector2(220, 54)
 			resume_btn.add_theme_font_size_override("font_size", 21)
+			resume_btn.mouse_entered.connect(func() -> void:
+				_play_sm_se("ui_hover", 0.42)
+			)
 			resume_btn.pressed.connect(_select_episode_from_portal.bind(ep, true))
 			foot.add_child(resume_btn)
 	else:
@@ -1440,7 +1545,7 @@ func _select_episode_from_portal(ep: Dictionary, direct_continue: bool = false) 
 	if not _load_episode_data(ep):
 		_qol_overlays.show_toast("この時代のシナリオデータが見つかりません", true)
 		return
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
 	_portal_screen.visible = false
 	_portal_particles.set_effect("none", true)
 	if direct_continue and _save_store.has_any_save():
@@ -1457,6 +1562,7 @@ func _on_portal_return_pressed() -> void:
 # --- 画面遷移 ---
 
 func _show_title_screen() -> void:
+	_stop_voice_safe()
 	if _transition_tween != null and _transition_tween.is_valid():
 		_transition_tween.kill()
 	if _banner_tween != null and _banner_tween.is_valid():
@@ -1507,6 +1613,7 @@ func _show_title_screen() -> void:
 	_title_screen.visible = true
 	_title_particles.set_effect("embers", true)
 	_atmosphere_particles.set_effect("none", true)
+	_set_ambient_safe("embers")
 	_refresh_title_menu()
 
 	_title_art_host.modulate = Color(1, 1, 1, 0)
@@ -1520,7 +1627,8 @@ func _show_title_screen() -> void:
 
 
 func _on_start_pressed() -> void:
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
+	_get_game_manager().call("reset_flags")
 	_begin_play_session()
 	var start_id := str(_meta.get("startScene", "pro_01"))
 	_enter_scene(start_id)
@@ -1530,11 +1638,12 @@ func _on_continue_pressed() -> void:
 	var latest := _save_store.get_latest_save()
 	if latest.is_empty():
 		return
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
 	_on_qol_load_slot(str(latest["slot_id"]))
 
 
 func _begin_play_session() -> void:
+	_stop_voice_safe()
 	_save_store.flush_if_dirty()
 	_release_focus()
 	_backlog_entries.clear()
@@ -1624,27 +1733,53 @@ func _enter_scene(
 	_location_label.text = str(_current_scene.get("location", ""))
 
 	var fx_name := str(_current_scene.get("effect", "none"))
+	var amb_name := str(_current_scene.get("ambient", fx_name))
 	_current_effect_name = fx_name
 	_apply_background(str(_current_scene.get("bg", "")))
 	_atmosphere_particles.set_effect(fx_name)
 	_clear_all_sprites_immediate()
 
 	var lines: Array = _current_scene.get("lines", [])
+	var gm := _get_game_manager()
 	if start_line > 0 and start_line < lines.size():
-		# 途中復帰時は start_line までの累積 BGM / 立ち絵状態を復元する
+		# 途中復帰時は start_line までの累積シーン状態（BGM/背景/場所/エフェクト/環境音/立ち絵）を復元する
 		var resolved_bgm := str(_current_scene.get("bgm", ""))
+		var resolved_bg := ""
+		var resolved_loc := ""
+		var resolved_fx := fx_name
+		var resolved_amb := amb_name
 		var resolved_sprites: Variant = null
 		for i in start_line + 1:
 			var ln: Dictionary = lines[i]
+			if ln.has("require_flag") and not bool(gm.call("has_flag", str(ln["require_flag"]))):
+				continue
+			if ln.has("location"):
+				resolved_loc = str(ln["location"])
+			if ln.has("bg"):
+				resolved_bg = str(ln["bg"])
+			if ln.has("effect"):
+				resolved_fx = str(ln["effect"])
+				if not ln.has("ambient"):
+					resolved_amb = resolved_fx
+			if ln.has("ambient"):
+				resolved_amb = str(ln["ambient"])
 			if ln.has("bgm"):
 				resolved_bgm = str(ln["bgm"])
 			if i < start_line and ln.has("sprites"):
 				resolved_sprites = ln["sprites"]
+		if not resolved_loc.is_empty():
+			_location_label.text = resolved_loc
+		if not resolved_bg.is_empty():
+			_apply_background(resolved_bg)
+		_current_effect_name = resolved_fx
+		_atmosphere_particles.set_effect(resolved_fx, true)
+		_set_ambient_safe(resolved_amb)
 		_play_bgm(resolved_bgm)
-		_apply_vignette_mood(fx_name, scene_id, true)
+		_apply_vignette_mood(resolved_fx, scene_id, true)
 		if resolved_sprites != null and not (lines[start_line] as Dictionary).has("sprites"):
 			_update_sprites(resolved_sprites, true)
 	else:
+		_set_ambient_safe(amb_name)
 		_play_bgm(str(_current_scene.get("bgm", "")))
 		_apply_vignette_mood(fx_name, scene_id, true)
 
@@ -1704,7 +1839,17 @@ func _show_chapter_banner(chapter: String, title: String) -> void:
 # --- 行表示・タイプライター・既読スキップ ---
 
 func _show_line(index: int, append_backlog: bool = true) -> void:
+	_stop_voice_safe()
 	var lines: Array = _current_scene.get("lines", [])
+	var gm := _get_game_manager()
+	while index >= 0 and index < lines.size():
+		var candidate: Variant = lines[index]
+		if candidate is Dictionary and (candidate as Dictionary).has("require_flag"):
+			if not bool(gm.call("has_flag", str((candidate as Dictionary)["require_flag"]))):
+				index += 1
+				continue
+		break
+
 	if index < 0 or index >= lines.size():
 		_on_scene_finished()
 		return
@@ -1729,11 +1874,30 @@ func _show_line(index: int, append_backlog: bool = true) -> void:
 
 	var line_se := str(line["se"]) if line.has("se") else ""
 	var line_flash := str(line["flash"]) if line.has("flash") else ""
+	var line_voice := str(line.get("voice", ""))
 
+	# 行単位の動的場面転換（5年後転換など）
+	if line.has("location"):
+		_location_label.text = str(line["location"])
+	if line.has("bg"):
+		_apply_background(str(line["bg"]))
+	if line.has("effect"):
+		var eff := str(line["effect"])
+		_current_effect_name = eff
+		_atmosphere_particles.set_effect(eff, skipping_now)
 	if line.has("bgm"):
 		_play_bgm(str(line["bgm"]))
+	elif line.has("effect"):
+		_apply_vignette_mood(_current_effect_name, _current_scene_id, skipping_now)
+	if line.has("ambient"):
+		_set_ambient_safe(str(line["ambient"]))
+	elif line.has("effect"):
+		_set_ambient_safe(_current_effect_name)
+
 	if not line_se.is_empty() and not skipping_now:
 		_play_se(line_se)
+	if not line_voice.is_empty() and not skipping_now:
+		_play_voice_safe(line_voice)
 	if bool(line.get("shake", false)) and not skipping_now:
 		_trigger_shake()
 	if not line_flash.is_empty() and not skipping_now:
@@ -1819,6 +1983,9 @@ func _apply_speaker_style(speaker: String, instant: bool = false) -> void:
 	elif speaker.contains("宗久"):
 		bar_col = Color("63A172")
 		name_col = Color("DCF0E0")
+	elif speaker.contains("家康"):
+		bar_col = Color("4A8B6F")
+		name_col = Color("D6F0E3")
 	else:
 		bar_col = COLOR_GOLD
 		name_col = COLOR_PAPER
@@ -2521,15 +2688,28 @@ func _show_choices(scene: Dictionary) -> void:
 	for c in _choices_container.get_children():
 		c.queue_free()
 
+	var gm := _get_game_manager()
 	var choices: Array = scene.get("choices", [])
-	var first_btn: Button = null
+	var visible_choices: Array[Dictionary] = []
 	for ch in choices:
 		if not (ch is Dictionary):
 			continue
-		var label_str := str(ch.get("label", ""))
-		var sub_str := str(ch.get("sub", ""))
-		var target_id := str(ch.get("target", ""))
-		var btn := _create_choice_button(label_str, sub_str, target_id)
+		var ch_dict := ch as Dictionary
+		if ch_dict.has("require_flags"):
+			var req_flags: Variant = ch_dict["require_flags"]
+			if req_flags is Array and not bool(gm.call("has_all_flags", req_flags as Array)):
+				continue
+		visible_choices.append(ch_dict)
+
+	var is_compact := visible_choices.size() >= 3
+	var first_btn: Button = null
+	for ch_dict in visible_choices:
+		var label_str := str(ch_dict.get("label", ""))
+		var sub_str := str(ch_dict.get("sub", ""))
+		var target_id := str(ch_dict.get("target", ""))
+		var set_flag_name := str(ch_dict.get("set_flag", ""))
+		var is_true_route := bool(ch_dict.get("is_true_route", false))
+		var btn := _create_choice_button(label_str, sub_str, target_id, set_flag_name, is_true_route, is_compact)
 		_choices_container.add_child(btn)
 		if first_btn == null:
 			first_btn = btn
@@ -2542,15 +2722,30 @@ func _show_choices(scene: Dictionary) -> void:
 		_focus_control(first_btn)
 
 
-func _create_choice_button(main_label: String, sub_text: String, target_id: String) -> Button:
+func _create_choice_button(
+	main_label: String,
+	sub_text: String,
+	target_id: String,
+	set_flag_name: String = "",
+	is_true_route: bool = false,
+	is_compact: bool = false
+) -> Button:
 	var btn := Button.new()
-	btn.custom_minimum_size = Vector2(1170, 171)
+	btn.custom_minimum_size = Vector2(1170, 148 if is_compact else 171)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.focus_mode = Control.FOCUS_ALL
 
-	var sb_norm := _make_box_style(Color(0.094, 0.094, 0.122, 0.92), Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.65), 1, 0, 0)
-	var sb_hov := _make_box_style(Color(0.20, 0.065, 0.075, 0.96), COLOR_GOLD, 1, 0, 0)
-	var sb_prs := _make_box_style(COLOR_CRIMSON, COLOR_GOLD, 3, 0, 0)
+	var sb_norm: StyleBoxFlat
+	var sb_hov: StyleBoxFlat
+	var sb_prs: StyleBoxFlat
+	if is_true_route:
+		sb_norm = _make_box_style(Color("#241F15"), COLOR_GOLD, 2, 0, 0)
+		sb_hov = _make_box_style(Color("#3B2E16"), Color("E6C675"), 2, 0, 0)
+		sb_prs = _make_box_style(Color("#54401A"), Color("F2DF9F"), 3, 0, 0)
+	else:
+		sb_norm = _make_box_style(Color(0.094, 0.094, 0.122, 0.92), Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.65), 1, 0, 0)
+		sb_hov = _make_box_style(Color(0.20, 0.065, 0.075, 0.96), COLOR_GOLD, 1, 0, 0)
+		sb_prs = _make_box_style(COLOR_CRIMSON, COLOR_GOLD, 3, 0, 0)
 	btn.add_theme_stylebox_override("normal", sb_norm)
 	btn.add_theme_stylebox_override("hover", sb_hov)
 	btn.add_theme_stylebox_override("focus", sb_hov)
@@ -2562,9 +2757,14 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	btn.add_child(hbox)
 
+	var default_bar_col := COLOR_GOLD if is_true_route else Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.5)
+	var hi_bar_col := Color("F2DF9F") if is_true_route else COLOR_CRIMSON
+	var default_lbl_col := COLOR_GOLD if is_true_route else COLOR_PAPER
+	var hi_lbl_col := Color("F7E8BC") if is_true_route else COLOR_GOLD
+
 	var left_bar := ColorRect.new()
 	left_bar.custom_minimum_size = Vector2(8, 0)
-	left_bar.color = Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.5)
+	left_bar.color = default_bar_col
 	left_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(left_bar)
 
@@ -2573,14 +2773,14 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 	margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	margin.add_theme_constant_override("margin_left", 33)
 	margin.add_theme_constant_override("margin_right", 33)
-	margin.add_theme_constant_override("margin_top", 15)
-	margin.add_theme_constant_override("margin_bottom", 15)
+	margin.add_theme_constant_override("margin_top", 12 if is_compact else 15)
+	margin.add_theme_constant_override("margin_bottom", 12 if is_compact else 15)
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_child(margin)
 
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	vbox.add_theme_constant_override("separation", 8)
+	vbox.add_theme_constant_override("separation", 6 if is_compact else 8)
 	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin.add_child(vbox)
 
@@ -2590,11 +2790,11 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 	vbox.add_child(title_row)
 
 	var lbl := Label.new()
-	lbl.text = "◆ " + main_label
+	lbl.text = ("★ " if is_true_route else "◆ ") + main_label
 	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.add_theme_font_size_override("font_size", 30)
-	lbl.add_theme_color_override("font_color", COLOR_PAPER)
+	lbl.add_theme_font_size_override("font_size", 27 if is_compact else 30)
+	lbl.add_theme_color_override("font_color", default_lbl_col)
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	title_row.add_child(lbl)
 
@@ -2618,8 +2818,8 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 	var sub_lbl := Label.new()
 	sub_lbl.text = sub_text
 	sub_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	sub_lbl.add_theme_font_size_override("font_size", 23)
-	sub_lbl.add_theme_color_override("font_color", COLOR_MUTED)
+	sub_lbl.add_theme_font_size_override("font_size", 21 if is_compact else 23)
+	sub_lbl.add_theme_color_override("font_color", Color("D8C596") if is_true_route else COLOR_MUTED)
 	sub_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(sub_lbl)
 
@@ -2631,18 +2831,19 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 	hover_line.anchor_bottom = 1.0
 	hover_line.offset_top = -3.0
 	hover_line.offset_bottom = 0.0
-	hover_line.color = Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.0)
+	hover_line.color = COLOR_GOLD if is_true_route else Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.0)
 	hover_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	btn.add_child(hover_line)
 
 	var on_hi := func() -> void:
-		left_bar.color = COLOR_CRIMSON
-		hover_line.color = COLOR_GOLD
-		lbl.add_theme_color_override("font_color", COLOR_GOLD)
+		left_bar.color = hi_bar_col
+		hover_line.color = Color("F2DF9F") if is_true_route else COLOR_GOLD
+		lbl.add_theme_color_override("font_color", hi_lbl_col)
+		_play_sm_se("ui_hover", 0.45)
 	var on_unhi := func() -> void:
-		left_bar.color = Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.5)
-		hover_line.color = Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.0)
-		lbl.add_theme_color_override("font_color", COLOR_PAPER)
+		left_bar.color = default_bar_col
+		hover_line.color = COLOR_GOLD if is_true_route else Color(COLOR_GOLD.r, COLOR_GOLD.g, COLOR_GOLD.b, 0.0)
+		lbl.add_theme_color_override("font_color", default_lbl_col)
 
 	btn.mouse_entered.connect(on_hi)
 	btn.focus_entered.connect(on_hi)
@@ -2652,7 +2853,9 @@ func _create_choice_button(main_label: String, sub_text: String, target_id: Stri
 		if not _at_choices or _is_transitioning:
 			return
 		_at_choices = false
-		_play_synth_se("ui_choice", -9.0)
+		if not set_flag_name.is_empty():
+			_get_game_manager().call("set_flag", set_flag_name, true)
+		_play_sm_se("ui_confirm", 0.85)
 		_release_focus()
 		for ch_node in _choices_container.get_children():
 			if ch_node is Button:
@@ -2804,6 +3007,32 @@ func _update_skip_button_visual() -> void:
 	_skip_button.add_theme_stylebox_override("normal", sb)
 
 
+func _on_mute_pressed() -> void:
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("toggle_mute")
+	_update_mute_button_visual()
+	_apply_live_audio_volumes()
+	if not _is_sound_muted():
+		_play_ui_click()
+
+
+func _update_mute_button_visual() -> void:
+	if _mute_hud_button == null:
+		return
+	var is_muted := _is_sound_muted()
+	var sb: StyleBoxFlat
+	if is_muted:
+		_mute_hud_button.text = "音：切"
+		sb = _make_box_style(COLOR_CRIMSON, COLOR_GOLD, 1, 16, 10)
+		_mute_hud_button.add_theme_color_override("font_color", COLOR_GOLD)
+	else:
+		_mute_hud_button.text = "音：入"
+		sb = _make_box_style(COLOR_SUMI, COLOR_GOLD, 1, 16, 10)
+		_mute_hud_button.remove_theme_color_override("font_color")
+	_mute_hud_button.add_theme_stylebox_override("normal", sb)
+
+
 func _on_record_pressed() -> void:
 	if not _in_game or _is_transitioning or _ending_card_overlay.visible:
 		return
@@ -2858,6 +3087,7 @@ func _build_save_snapshot() -> Dictionary:
 		"excerpt": txt,
 		"at_choices": _at_choices or _choice_overlay.visible,
 		"backlog": backlog_slice,
+		"session_flags": _get_game_manager().call("export_flags"),
 		"saved_at": Time.get_datetime_string_from_system(false, true),
 		"saved_unix": Time.get_unix_time_from_system(),
 	}
@@ -2867,7 +3097,7 @@ func _quick_save() -> void:
 	if not _in_game or _is_transitioning or _ending_card_overlay.visible:
 		return
 	_save_store.write_slot("quick", _build_save_snapshot())
-	_play_synth_se("ui_choice", -11.0)
+	_play_sm_se("ui_confirm", 0.78)
 	_qol_overlays.show_toast("急速の栞（クイックセーブ）に記録しました")
 
 
@@ -2875,7 +3105,7 @@ func _quick_load() -> void:
 	if not _save_store.has_slot("quick"):
 		_qol_overlays.show_toast("急速の栞に記録がありません", true)
 		return
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
 	_on_qol_load_slot("quick")
 
 
@@ -2883,7 +3113,7 @@ func _on_qol_save_slot(slot_id: String) -> void:
 	if not _in_game:
 		return
 	_save_store.write_slot(slot_id, _build_save_snapshot())
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.80)
 	_qol_overlays.refresh_save_overlay_if_open()
 	_qol_overlays.show_toast("%s に記録しました" % str(SaveStore.SLOT_LABELS.get(slot_id, slot_id)))
 
@@ -2906,6 +3136,7 @@ func _on_qol_load_slot(slot_id: String) -> void:
 			if item is Dictionary:
 				_backlog_entries.append((item as Dictionary).duplicate(true))
 
+	_get_game_manager().call("import_flags", data.get("session_flags", {}))
 	var target_line := int(data.get("line_index", 0))
 	var restore_choices := bool(data.get("at_choices", false))
 	_enter_scene(scene_id, false, target_line, restore_choices)
@@ -2924,7 +3155,8 @@ func _on_qol_delete_slot(slot_id: String) -> void:
 func _on_qol_chapter_selected(scene_id: String) -> void:
 	if not _scenes.has(scene_id):
 		return
-	_play_synth_se("ui_choice", -10.0)
+	_play_sm_se("ui_confirm", 0.85)
+	_get_game_manager().call("reset_flags")
 	_begin_play_session()
 	_enter_scene(scene_id, true, 0, false)
 
@@ -2984,13 +3216,14 @@ func _close_confirm_overlay() -> void:
 
 
 func _confirm_return_to_title() -> void:
-	_play_synth_se("ui_choice", -11.0)
+	_play_sm_se("ui_confirm", 0.78)
 	_show_title_screen()
 
 
 # --- エンディングカード＆図鑑 ---
 
 func _show_ending_card(ending: Dictionary) -> void:
+	_stop_voice_safe()
 	_set_ui_hidden(false)
 	_skip_mode = false
 	_auto_mode = false
@@ -3005,6 +3238,7 @@ func _show_ending_card(ending: Dictionary) -> void:
 	_unlock_ending(ed_id)
 
 	var frame_col := COLOR_GOLD
+	var border_w := 3
 	match ed_id:
 		"END_1":
 			frame_col = Color("C84A4A")
@@ -3014,13 +3248,20 @@ func _show_ending_card(ending: Dictionary) -> void:
 			frame_col = Color("C8A86B")
 		"END_4":
 			frame_col = Color("8C82B8")
-	var end_sb := _make_box_style(Color(0.055, 0.048, 0.062, 0.96), frame_col, 3, 72, 57)
+		"END_5_TRUE":
+			frame_col = Color("E6C675")
+			border_w = 4
+	var end_sb := _make_box_style(Color(0.055, 0.048, 0.062, 0.96), frame_col, border_w, 72, 57)
 	_ending_card_panel.add_theme_stylebox_override("panel", end_sb)
 	_ending_num_label.add_theme_color_override("font_color", frame_col.lightened(0.18))
 
-	_ending_num_label.text = "終幕・第%s" % ed_num if not ed_num.is_empty() else "終幕"
+	if ed_id == "END_5_TRUE":
+		_ending_num_label.text = "★ TRUE END ―― 終幕・第%s" % ed_num if not ed_num.is_empty() else "★ TRUE END"
+	else:
+		_ending_num_label.text = "終幕・第%s" % ed_num if not ed_num.is_empty() else "終幕"
 	_ending_title_label.text = ed_title
 	_ending_sub_label.text = ed_sub
+	_play_sm_se("temple_bell", 0.9)
 
 	var actions_row := _ending_gallery_btn.get_parent() as Control
 	_ending_num_label.modulate.a = 0.0
@@ -3086,8 +3327,8 @@ func _open_gallery(series_mode: bool = false) -> void:
 		var avail_total := 0
 		for item in episodes:
 			if item is Dictionary and bool((item as Dictionary).get("available", false)):
-				avail_total += 4
-		_gallery_count_label.text = "シリーズ達成状況： %d / %d" % [total_unlocked, maxi(avail_total, 4)]
+				avail_total += int((item as Dictionary).get("total_endings", 5))
+		_gallery_count_label.text = "シリーズ達成状況： %d / %d" % [total_unlocked, maxi(avail_total, 5)]
 		_gallery_count_label.add_theme_color_override("font_color", COLOR_GOLD if total_unlocked > 0 else COLOR_PAPER)
 		for item in episodes:
 			if item is Dictionary:
@@ -3100,7 +3341,7 @@ func _open_gallery(series_mode: bool = false) -> void:
 	var ep_title := str(_current_episode.get("title", "本能寺・残照録"))
 	if _gallery_title_label != null:
 		_gallery_title_label.text = "終幕録 ― %s" % ep_title
-	var total := int(_meta.get("totalEndings", max(_endings_catalog.size(), 4)))
+	var total := int(_meta.get("totalEndings", max(_endings_catalog.size(), 5)))
 	if _unlocked_endings.size() >= total and total > 0:
 		_gallery_count_label.text = "達成状況： %d / %d　【全歴史踏破】" % [_unlocked_endings.size(), total]
 		_gallery_count_label.add_theme_color_override("font_color", COLOR_GOLD)
@@ -3151,6 +3392,7 @@ func _create_series_gallery_row(ep: Dictionary) -> PanelContainer:
 	var avail := bool(ep.get("available", false))
 	var accent := Color(str(ep.get("accent_color", "#9E1B1B")))
 	var unlocked_list := _save_store.get_episode_unlocked_endings(ep_id)
+	var total_ends := int(ep.get("total_endings", _get_game_manager().call("get_total_endings", ep_id)))
 
 	var card := PanelContainer.new()
 	card.custom_minimum_size = Vector2(0, 198)
@@ -3176,8 +3418,8 @@ func _create_series_gallery_row(ep: Dictionary) -> PanelContainer:
 	top.add_child(ep_lbl)
 
 	var cnt_lbl := Label.new()
-	cnt_lbl.text = "終幕 %d / 4" % unlocked_list.size() if avail else "準備中"
-	cnt_lbl.add_theme_color_override("font_color", COLOR_PAPER if not unlocked_list.is_empty() else COLOR_MUTED)
+	cnt_lbl.text = "終幕 %d / %d" % [unlocked_list.size(), total_ends] if avail else "準備中"
+	cnt_lbl.add_theme_color_override("font_color", COLOR_GOLD if (avail and unlocked_list.size() >= total_ends) else (COLOR_PAPER if not unlocked_list.is_empty() else COLOR_MUTED))
 	cnt_lbl.add_theme_font_size_override("font_size", 22)
 	top.add_child(cnt_lbl)
 
@@ -3199,18 +3441,21 @@ func _create_series_gallery_row(ep: Dictionary) -> PanelContainer:
 
 	for ed in eds:
 		var ed_id := str(ed.get("id", ""))
+		var is_true_end := (ed_id == "END_5_TRUE")
 		var is_unlocked := unlocked_list.has(ed_id)
 		var ed_num := str(ed.get("number", "?"))
 		var ed_title := str(ed.get("title", "")) if is_unlocked else "？？？？？？"
 		var replay_scene := str(ed.get("scene_id", ""))
 		if is_unlocked and not replay_scene.is_empty():
 			var rbtn := Button.new()
-			rbtn.text = "◆ 第%s幕「%s」を再鑑賞" % [ed_num, ed_title]
+			rbtn.text = ("★ 真・第%s幕「%s」を再鑑賞" if is_true_end else "◆ 第%s幕「%s」を再鑑賞") % [ed_num, ed_title]
 			rbtn.custom_minimum_size = Vector2(0, 48)
 			rbtn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			rbtn.add_theme_font_size_override("font_size", 20)
+			if is_true_end:
+				rbtn.add_theme_color_override("font_color", COLOR_GOLD)
 			rbtn.pressed.connect(func() -> void:
-				_play_synth_se("ui_choice", -10.0)
+				_play_sm_se("ui_confirm", 0.85)
 				if _load_episode_data(ep):
 					_opened_gallery_from_ending = false
 					_opened_gallery_from_portal = false
@@ -3231,13 +3476,16 @@ func _create_series_gallery_row(ep: Dictionary) -> PanelContainer:
 
 
 func _create_ending_card_item(ed: Dictionary, unlocked: bool) -> PanelContainer:
+	var ed_id := str(ed.get("id", ""))
+	var is_true_end := (ed_id == "END_5_TRUE")
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(675, 282)
+	card.custom_minimum_size = Vector2(660, 232)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	var border_col := COLOR_GOLD if unlocked else Color(0.32, 0.30, 0.28, 0.7)
-	var bg_col := Color(0.11, 0.095, 0.125, 0.95) if unlocked else Color(0.06, 0.06, 0.08, 0.92)
-	card.add_theme_stylebox_override("panel", _make_box_style(bg_col, border_col, 1, 30, 22))
+	var border_col := (Color("E6C675") if is_true_end else COLOR_GOLD) if unlocked else Color(0.32, 0.30, 0.28, 0.7)
+	var bg_col := (Color(0.15, 0.125, 0.08, 0.96) if is_true_end else Color(0.11, 0.095, 0.125, 0.95)) if unlocked else Color(0.06, 0.06, 0.08, 0.92)
+	var border_w := 2 if (unlocked and is_true_end) else 1
+	card.add_theme_stylebox_override("panel", _make_box_style(bg_col, border_col, border_w, 30, 20))
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 10)
@@ -3247,29 +3495,35 @@ func _create_ending_card_item(ed: Dictionary, unlocked: bool) -> PanelContainer:
 	vbox.add_child(top_row)
 
 	var num_lbl := Label.new()
-	num_lbl.text = "第%s幕" % str(ed.get("number", "?"))
+	var num_str := str(ed.get("number", "?"))
+	if unlocked and is_true_end:
+		num_lbl.text = "★ 真・第%s幕" % num_str
+	elif is_true_end:
+		num_lbl.text = "真・第%s幕" % num_str
+	else:
+		num_lbl.text = "第%s幕" % num_str
 	num_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	num_lbl.add_theme_color_override("font_color", COLOR_GOLD if unlocked else COLOR_MUTED)
 	num_lbl.add_theme_font_size_override("font_size", 24)
 	top_row.add_child(num_lbl)
 
 	var badge := Label.new()
-	badge.text = "【達成済】" if unlocked else "【未到達】"
-	badge.add_theme_color_override("font_color", COLOR_CRIMSON.lightened(0.28) if unlocked else COLOR_MUTED)
+	badge.text = ("【真終幕・達成済】" if is_true_end else "【達成済】") if unlocked else "【未到達】"
+	badge.add_theme_color_override("font_color", (Color("E6C675") if is_true_end else COLOR_CRIMSON.lightened(0.28)) if unlocked else COLOR_MUTED)
 	badge.add_theme_font_size_override("font_size", 23)
 	top_row.add_child(badge)
 
 	var title_lbl := Label.new()
 	title_lbl.text = str(ed.get("title", "")) if unlocked else "？？？？？？"
 	title_lbl.add_theme_color_override("font_color", COLOR_PAPER if unlocked else COLOR_MUTED)
-	title_lbl.add_theme_font_size_override("font_size", 35)
+	title_lbl.add_theme_font_size_override("font_size", 34)
 	vbox.add_child(title_lbl)
 
 	var sub_lbl := Label.new()
-	sub_lbl.text = str(ed.get("subtitle", "")) if unlocked else "分岐の選択により解放される終幕"
+	sub_lbl.text = str(ed.get("subtitle", "")) if unlocked else ("真ルート条件を満たすと解放される終幕" if is_true_end else "分岐の選択により解放される終幕")
 	sub_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	sub_lbl.add_theme_color_override("font_color", COLOR_GOLD if unlocked else Color(0.55, 0.53, 0.50, 0.8))
-	sub_lbl.add_theme_font_size_override("font_size", 22)
+	sub_lbl.add_theme_font_size_override("font_size", 21)
 	vbox.add_child(sub_lbl)
 
 	if unlocked:
@@ -3295,7 +3549,8 @@ func _create_ending_card_item(ed: Dictionary, unlocked: bool) -> PanelContainer:
 			replay_btn.custom_minimum_size = Vector2(150, 46)
 			replay_btn.add_theme_font_size_override("font_size", 21)
 			replay_btn.pressed.connect(func() -> void:
-				_play_synth_se("ui_choice", -10.0)
+				_play_sm_se("ui_confirm", 0.85)
+				_get_game_manager().call("reset_flags")
 				_opened_gallery_from_ending = false
 				_gallery_overlay.visible = false
 				_begin_play_session()
@@ -3333,8 +3588,21 @@ func _get_bgm_base_db() -> float:
 
 
 func _apply_live_audio_volumes() -> void:
+	var sm := _get_sound_manager()
+	if sm != null:
+		sm.call("set_volumes", 0.85, clampf(float(_save_store.settings.get("se_volume", 0.90)), 0.0, 1.0))
+
 	if _current_bgm_id.is_empty() or _current_bgm_id == "silence":
 		return
+	var is_muted := _is_sound_muted()
+	if is_muted:
+		if _bgm_tween != null and _bgm_tween.is_valid():
+			_bgm_tween.kill()
+			_bgm_tween = null
+		if _bgm_player.playing:
+			_bgm_player.volume_db = -80.0
+		return
+
 	var bgm_dir := str(_get_game_manager().call("resolve_audio_dir", "bgm", _current_episode_dir))
 	var target_stream := _load_audio_safe(bgm_dir, _current_bgm_id, "bgm_", true, "bgm")
 	if target_stream != null and (_bgm_tween != null and _bgm_tween.is_valid()):
@@ -3377,19 +3645,19 @@ func _play_bgm(bgm_id: String) -> void:
 		_bgm_player.stream = null
 		return
 
-	var target_db := _get_bgm_base_db() + _save_store.get_bgm_gain_db()
+	var target_db := -80.0 if _is_sound_muted() else (_get_bgm_base_db() + _save_store.get_bgm_gain_db())
 	if _bgm_player.playing and _bgm_player.stream != null:
 		var prev_id := bgm_id
 		_bgm_tween = create_tween()
-		_bgm_tween.tween_property(_bgm_player, "volume_db", -48.0, 0.22).set_trans(Tween.TRANS_SINE)
+		_bgm_tween.tween_property(_bgm_player, "volume_db", -80.0 if _is_sound_muted() else -48.0, 0.22).set_trans(Tween.TRANS_SINE)
 		_bgm_tween.tween_callback(func() -> void:
 			if _current_bgm_id != prev_id:
 				return
 			_bgm_player.stream = stream
-			_bgm_player.volume_db = -38.0
+			_bgm_player.volume_db = -80.0 if _is_sound_muted() else -38.0
 			_bgm_player.play()
 		)
-		_bgm_tween.tween_property(_bgm_player, "volume_db", target_db, 0.25).set_trans(Tween.TRANS_SINE)
+		_bgm_tween.tween_property(_bgm_player, "volume_db", -80.0 if _is_sound_muted() else (_get_bgm_base_db() + _save_store.get_bgm_gain_db()), 0.25).set_trans(Tween.TRANS_SINE)
 	else:
 		_bgm_player.stream = stream
 		_bgm_player.volume_db = minf(-26.0, target_db)
@@ -3411,24 +3679,16 @@ func _stop_bgm(clear_mood: bool = true) -> void:
 
 
 func _play_se(se_id: String) -> void:
-	if se_id.is_empty():
+	if se_id.is_empty() or _is_sound_muted():
 		return
 	var se_gain := _save_store.get_se_gain_db()
 	if se_gain <= -79.0:
 		return
-	var se_dir := str(_get_game_manager().call("resolve_audio_dir", "se", _current_episode_dir))
-	var stream := _load_audio_safe(se_dir, se_id, "se_", false, "se")
-	if stream != null:
-		var p := _acquire_se_player()
-		p.stream = stream
-		p.volume_db = -2.5 + se_gain
-		p.play()
-	else:
-		_play_synth_se(se_id, -8.0)
+	_play_sm_se(se_id, 1.0)
 
 
 func _play_ui_click() -> void:
-	_play_synth_se("ui_click", -14.0)
+	_play_sm_se("ui_type", 0.6)
 
 
 func _load_audio_safe(

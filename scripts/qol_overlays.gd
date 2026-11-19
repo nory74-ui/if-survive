@@ -417,6 +417,8 @@ func _get_ordered_scene_ids() -> Array[String]:
 
 
 func _route_badge_info(sid: String, sc: Dictionary) -> Dictionary:
+	if sid == "end_05_true" or (sc.has("ending") and sc["ending"] is Dictionary and str((sc["ending"] as Dictionary).get("id", "")) == "END_5_TRUE"):
+		return {"text": "真・終幕", "color": Color("E6C675")}
 	if sid.begins_with("pro_"):
 		return {"text": "序章", "color": COLOR_GOLD}
 	if sid.begins_with("routeA_"):
