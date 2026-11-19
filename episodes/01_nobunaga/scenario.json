@@ -14,7 +14,12 @@
       "bg_azuchi_throne": "assets/bg/bg_azuchi_throne.png",
       "bg_sakai_galleon": "assets/bg/bg_sakai_galleon.png",
       "bg_sakai_tearoom": "assets/bg/bg_sakai_tearoom.png",
-      "bg_kiyosu_inn": "assets/bg/bg_kiyosu_inn.png"
+      "bg_kiyosu_inn": "assets/bg/bg_kiyosu_inn.png",
+      "bg_sakai_alley": "assets/bg/bg_sakai_alley.png",
+      "bg_kiyosu_fire": "assets/bg/bg_kiyosu_fire.png",
+      "bg_sakai_mansion": "assets/bg/bg_sakai_mansion.png",
+      "bg_honnoji_chamber": "assets/bg/bg_honnoji_chamber.png",
+      "bg_azuchi_spring": "assets/bg/bg_azuchi_spring.png"
     },
     "characters": {
       "nobunaga_normal": "assets/char/char_nobunaga_normal.png",
@@ -31,7 +36,10 @@
       "hideyoshi_normal": "assets/char/char_hideyoshi_normal.png",
       "hideyoshi_tears": "assets/char/char_hideyoshi_tears.png",
       "sokyu_normal": "assets/char/char_sokyu_normal.png",
-      "sokyu_fan": "assets/char/char_sokyu_fan.png"
+      "sokyu_fan": "assets/char/char_sokyu_fan.png",
+      "ieyasu_normal": "assets/char/char_ieyasu_normal.png",
+      "samurai_veteran": "assets/char/char_samurai_veteran.png",
+      "samurai_retainer": "assets/char/char_samurai_retainer.png"
     },
     "bgm": {
       "title_theme": "assets/bgm/title_theme.ogg",
@@ -71,7 +79,7 @@
       "chapter": "序章・一",
       "title": "暁の銃声",
       "location": "天正十年 六月二日 暁 ― 本能寺・奥座敷",
-      "bg": "bg_honnoji_fire",
+      "bg": "bg_honnoji_chamber",
       "bgm": "tension_low",
       "effect": "embers",
       "lines": [
@@ -1201,7 +1209,7 @@
           "speaker": "",
           "text": "本能寺の変から五年。安土城の天守から見下ろす琵琶湖の向こうには、戦火の煙はもう一本も上がっていない。",
           "location": "天正十五年 春 ― 安土城・天守閣",
-          "bg": "bg_azuchi_throne",
+          "bg": "bg_azuchi_spring",
           "bgm": "ending_voyage",
           "effect": "sunbeams",
           "ambient": "none",
@@ -1422,7 +1430,7 @@
       "chapter": "暗躍篇・二",
       "title": "すれ違う影",
       "location": "天正十年 六月四日 夜 ― 堺・港近くの路地裏",
-      "bg": "bg_kiyosu_inn",
+      "bg": "bg_sakai_alley",
       "bgm": "tension_low",
       "effect": "moonlight",
       "lines": [
@@ -1434,7 +1442,14 @@
         },
         {
           "speaker": "徳川家康",
-          "text": "「……追手が堺の南口を塞いだか。本多忠勝、服部半蔵、もはや海路は絶たれた。このまま山深い伊賀路を抜けて三河へ戻るぞ！」"
+          "text": "「……追手が堺の南口を塞いだか。本多忠勝、服部半蔵、もはや海路は絶たれた。このまま山深い伊賀路を抜けて三河へ戻るぞ！」",
+          "sprites": [
+            {
+              "id": "ieyasu_normal",
+              "pos": "right",
+              "active": true
+            }
+          ]
         },
         {
           "speaker": "徳川家康",
@@ -1610,20 +1625,57 @@
         },
         {
           "speaker": "織田家の古参武士",
-          "text": "「――おい、ここだけの話だがな。俺は正直、少しホッとしているんだよ」"
+          "text": "「――おい、ここだけの話だがな。俺は正直、少しホッとしているんだよ」",
+          "sprites": [
+            {
+              "id": "samurai_veteran",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "samurai_retainer",
+              "pos": "right",
+              "active": false
+            }
+          ]
         },
         {
           "speaker": "別の武士",
-          "text": "「……わかるぞ。信長様がご存命の頃は、いつ些細な落ち度で首を刎ねられるか、毎晩生きた心地がしなかったからな」"
+          "text": "「……わかるぞ。信長様がご存命の頃は、いつ些細な落ち度で首を刎ねられるか、毎晩生きた心地がしなかったからな」",
+          "sprites": [
+            {
+              "id": "samurai_veteran",
+              "pos": "left",
+              "active": false
+            },
+            {
+              "id": "samurai_retainer",
+              "pos": "right",
+              "active": true
+            }
+          ]
         },
         {
           "speaker": "織田家の古参武士",
-          "text": "「まったくだ。今度の天下人は羽柴様の方がずっと話がわかる。先ほど羽柴様から諸将へ回った密命、聞いたか？ 『信長様の生存を騙る不届き者が現れたら、本物か偽物か確かめるまでもなく、その場で問答無用で斬り捨てよ』とな」"
+          "text": "「まったくだ。今度の天下人は羽柴様の方がずっと話がわかる。先ほど羽柴様から諸将へ回った密命、聞いたか？ 『信長様の生存を騙る不届き者が現れたら、本物か偽物か確かめるまでもなく、その場で問答無用で斬り捨てよ』とな」",
+          "sprites": [
+            {
+              "id": "samurai_veteran",
+              "pos": "left",
+              "active": true
+            },
+            {
+              "id": "samurai_retainer",
+              "pos": "right",
+              "active": false
+            }
+          ]
         },
         {
           "speaker": "",
           "text": "頭を鈍器で殴られたような衝撃が走った。秀吉は俺が生き延びている可能性に気づいていたのだ。その上で――『生き返った信長は偽物として殺せ』と、俺自身が育てた家臣たちに命じたのだ。",
-          "se": "ringing_ears"
+          "se": "ringing_ears",
+          "sprites": []
         },
         {
           "speaker": "弥助",
@@ -1749,7 +1801,7 @@
       "chapter": "終幕",
       "title": "影の操り人形師",
       "location": "天正十四年 ― 堺・南蛮商館の奥座敷",
-      "bg": "bg_sakai_tearoom",
+      "bg": "bg_sakai_mansion",
       "bgm": "ending_shadow",
       "effect": "dust",
       "lines": [
@@ -1809,7 +1861,7 @@
       "chapter": "終幕",
       "title": "二度目の本能寺",
       "location": "天正十年 六月二十八日 暁 ― 清洲・炎上する宿坊",
-      "bg": "bg_kiyosu_inn",
+      "bg": "bg_kiyosu_fire",
       "bgm": "ending_tragedy",
       "effect": "embers",
       "lines": [
