@@ -181,6 +181,7 @@ var _qol_overlays: QolOverlays
 var _main_title_screen: Control
 var _main_title_particles: AtmosphericEffects
 var _main_series_btn: Button
+var _main_continue_btn: Button
 var _main_gallery_btn: Button
 var _main_settings_btn: Button
 var _main_title_logo: TextureRect
@@ -850,6 +851,8 @@ func _connect_signals() -> void:
 
 	if _main_series_btn != null:
 		_main_series_btn.pressed.connect(_on_open_series_select_pressed)
+	if _main_continue_btn != null:
+		_main_continue_btn.pressed.connect(_on_open_load_menu)
 	if _main_gallery_btn != null:
 		_main_gallery_btn.pressed.connect(_on_open_portal_gallery_pressed)
 	if _main_settings_btn != null:
@@ -874,6 +877,7 @@ func _connect_signals() -> void:
 	_qol_overlays.test_se_requested.connect(func() -> void:
 		_play_sm_se("ui_confirm", 0.85)
 	)
+	_qol_overlays.reset_all_save_requested.connect(_on_qol_reset_all_save)
 	_qol_overlays.overlay_closed.connect(_on_qol_overlay_closed)
 
 	_backlog_close_btn.pressed.connect(_close_backlog)
@@ -1034,7 +1038,43 @@ func _load_episode_data(ep_info: Dictionary) -> bool:
 
 func _load_save_data() -> void:
 	_save_store.load_from_disk()
+	_sync_slots_from_game_manager()
 	_unlocked_endings = _save_store.unlocked_endings
+
+
+func _sync_slots_from_game_manager() -> void:
+	var gm := _get_game_manager()
+	var gm_slots_val: Variant = gm.get("save_slots")
+	if not (gm_slots_val is Dictionary):
+		return
+	var gm_slots := gm_slots_val as Dictionary
+	if gm_slots.is_empty():
+		return
+	var prev_ep := _save_store.get_active_episode_id()
+	for slot_id in ["1", "2", "3"]:
+		var raw: Variant = gm_slots.get(slot_id, null)
+		if not (raw is Dictionary) or (raw as Dictionary).is_empty():
+			continue
+		var rec := raw as Dictionary
+		var ep_id := str(rec.get("episode_id", SaveStore.DEFAULT_EPISODE_ID))
+		if ep_id.is_empty():
+			ep_id = SaveStore.DEFAULT_EPISODE_ID
+		_save_store.set_active_episode(ep_id)
+		if not _save_store.has_slot(slot_id):
+			var normalized := rec.duplicate(true)
+			if not normalized.has("saved_at") and normalized.has("timestamp"):
+				normalized["saved_at"] = str(normalized["timestamp"])
+			if not normalized.has("line_index") and normalized.has("line_idx"):
+				normalized["line_index"] = int(normalized["line_idx"])
+			if not normalized.has("excerpt") and normalized.has("preview_text"):
+				normalized["excerpt"] = str(normalized["preview_text"])
+			if not normalized.has("title") and normalized.has("episode_title"):
+				normalized["title"] = str(normalized["episode_title"])
+			if not normalized.has("session_flags") and normalized.has("flags"):
+				normalized["session_flags"] = (normalized["flags"] as Dictionary).duplicate(true) if normalized["flags"] is Dictionary else {}
+			_save_store.slots[slot_id] = normalized
+			_save_store._dirty = true
+	_save_store.set_active_episode(prev_ep)
 
 
 func _save_data() -> void:
@@ -1153,8 +1193,8 @@ func _setup_main_title_ui() -> void:
 
 	# 下部中央：最小限のボタン群
 	var btn_vbox := VBoxContainer.new()
-	btn_vbox.position = Vector2(560, 760)
-	btn_vbox.size = Vector2(800, 170)
+	btn_vbox.position = Vector2(520, 760)
+	btn_vbox.size = Vector2(880, 170)
 	btn_vbox.add_theme_constant_override("separation", 20)
 	_main_title_screen.add_child(btn_vbox)
 
@@ -1166,8 +1206,13 @@ func _setup_main_title_ui() -> void:
 
 	var sub_btns := HBoxContainer.new()
 	sub_btns.alignment = BoxContainer.ALIGNMENT_CENTER
-	sub_btns.add_theme_constant_override("separation", 24)
+	sub_btns.add_theme_constant_override("separation", 20)
 	btn_vbox.add_child(sub_btns)
+
+	_main_continue_btn = _make_title_btn("途上より（記録再開）", 21, 54)
+	_main_continue_btn.custom_minimum_size = Vector2(280, 54)
+	_style_title_menu_button(_main_continue_btn, false)
+	sub_btns.add_child(_main_continue_btn)
 
 	_main_gallery_btn = _make_title_btn("シリーズ終幕録", 21, 54)
 	_main_gallery_btn.custom_minimum_size = Vector2(240, 54)
@@ -1229,7 +1274,7 @@ func _show_main_title_screen() -> void:
 	_main_title_particles.set_effect("embers", true)
 	_title_particles.set_effect("none", true)
 	_atmosphere_particles.set_effect("none", true)
-	_set_ambient_safe("embers")
+	_set_ambient_safe("none")
 	_play_bgm("title_theme")
 
 	if _main_title_logo != null:
@@ -1399,7 +1444,7 @@ func _show_portal_screen() -> void:
 	_portal_particles.set_effect("embers", true)
 	_title_particles.set_effect("none", true)
 	_atmosphere_particles.set_effect("none", true)
-	_set_ambient_safe("embers")
+	_set_ambient_safe("none")
 	_play_bgm("title_theme")
 	_refresh_portal_cards()
 
@@ -1613,7 +1658,7 @@ func _show_title_screen() -> void:
 	_title_screen.visible = true
 	_title_particles.set_effect("embers", true)
 	_atmosphere_particles.set_effect("none", true)
-	_set_ambient_safe("embers")
+	_set_ambient_safe("none")
 	_refresh_title_menu()
 
 	_title_art_host.modulate = Color(1, 1, 1, 0)
@@ -1711,7 +1756,8 @@ func _enter_scene(
 	scene_id: String,
 	show_banner: bool = true,
 	start_line: int = 0,
-	restore_choices: bool = false
+	restore_choices: bool = false,
+	append_first_backlog: bool = true
 ) -> void:
 	if not _scenes.has(scene_id):
 		push_error("存在しないシーンID: " + scene_id)
@@ -1740,16 +1786,20 @@ func _enter_scene(
 	_clear_all_sprites_immediate()
 
 	var lines: Array = _current_scene.get("lines", [])
+	var has_scene_choices := _current_scene.has("choices") and not (_current_scene["choices"] as Array).is_empty()
+	if not lines.is_empty() and start_line >= lines.size() and has_scene_choices:
+		restore_choices = true
+	var clamped_line := clampi(start_line, 0, lines.size() - 1) if not lines.is_empty() else 0
 	var gm := _get_game_manager()
-	if start_line > 0 and start_line < lines.size():
-		# 途中復帰時は start_line までの累積シーン状態（BGM/背景/場所/エフェクト/環境音/立ち絵）を復元する
+	if not lines.is_empty() and (clamped_line > 0 or restore_choices):
+		# 途中復帰時は clamped_line までの累積シーン状態（BGM/背景/場所/エフェクト/環境音/立ち絵）を復元する
 		var resolved_bgm := str(_current_scene.get("bgm", ""))
 		var resolved_bg := ""
 		var resolved_loc := ""
 		var resolved_fx := fx_name
 		var resolved_amb := amb_name
 		var resolved_sprites: Variant = null
-		for i in start_line + 1:
+		for i in clamped_line + 1:
 			var ln: Dictionary = lines[i]
 			if ln.has("require_flag") and not bool(gm.call("has_flag", str(ln["require_flag"]))):
 				continue
@@ -1765,7 +1815,7 @@ func _enter_scene(
 				resolved_amb = str(ln["ambient"])
 			if ln.has("bgm"):
 				resolved_bgm = str(ln["bgm"])
-			if i < start_line and ln.has("sprites"):
+			if i < clamped_line and ln.has("sprites"):
 				resolved_sprites = ln["sprites"]
 		if not resolved_loc.is_empty():
 			_location_label.text = resolved_loc
@@ -1776,7 +1826,7 @@ func _enter_scene(
 		_set_ambient_safe(resolved_amb)
 		_play_bgm(resolved_bgm)
 		_apply_vignette_mood(resolved_fx, scene_id, true)
-		if resolved_sprites != null and not (lines[start_line] as Dictionary).has("sprites"):
+		if resolved_sprites != null and not (lines[clamped_line] as Dictionary).has("sprites"):
 			_update_sprites(resolved_sprites, true)
 	else:
 		_set_ambient_safe(amb_name)
@@ -1789,8 +1839,8 @@ func _enter_scene(
 	if lines.is_empty():
 		_on_scene_finished()
 	else:
-		_show_line(clampi(start_line, 0, lines.size() - 1))
-		if restore_choices and _current_scene.has("choices") and not (_current_scene["choices"] as Array).is_empty():
+		_show_line(clamped_line, append_first_backlog, restore_choices)
+		if restore_choices and has_scene_choices:
 			_finish_typing()
 			_show_choices(_current_scene)
 
@@ -1838,7 +1888,7 @@ func _show_chapter_banner(chapter: String, title: String) -> void:
 
 # --- 行表示・タイプライター・既読スキップ ---
 
-func _show_line(index: int, append_backlog: bool = true) -> void:
+func _show_line(index: int, append_backlog: bool = true, suppress_oneshot_fx: bool = false) -> void:
 	_stop_voice_safe()
 	var lines: Array = _current_scene.get("lines", [])
 	var gm := _get_game_manager()
@@ -1894,23 +1944,24 @@ func _show_line(index: int, append_backlog: bool = true) -> void:
 	elif line.has("effect"):
 		_set_ambient_safe(_current_effect_name)
 
-	if not line_se.is_empty() and not skipping_now:
+	var instant_fx := skipping_now or suppress_oneshot_fx
+	if not line_se.is_empty() and not instant_fx:
 		_play_se(line_se)
-	if not line_voice.is_empty() and not skipping_now:
+	if not line_voice.is_empty() and not instant_fx:
 		_play_voice_safe(line_voice)
-	if bool(line.get("shake", false)) and not skipping_now:
+	if bool(line.get("shake", false)) and not instant_fx:
 		_trigger_shake()
-	if not line_flash.is_empty() and not skipping_now:
+	if not line_flash.is_empty() and not instant_fx:
 		_trigger_flash(line_flash)
 	if line.has("sprites"):
-		_update_sprites(line["sprites"], skipping_now)
-	if not skipping_now and (not line_se.is_empty() or not line_flash.is_empty()):
+		_update_sprites(line["sprites"], instant_fx)
+	if not instant_fx and (not line_se.is_empty() or not line_flash.is_empty()):
 		_trigger_sprite_action(line_se, line_flash)
 
 	_suppress_sfx_for_skip = false
 
 	var speaker := str(line.get("speaker", ""))
-	_apply_speaker_style(speaker, skipping_now)
+	_apply_speaker_style(speaker, instant_fx)
 
 	_full_text = str(line.get("text", ""))
 	_body_text.text = _full_text
@@ -3071,23 +3122,33 @@ func _build_save_snapshot() -> Dictionary:
 	if _line_index >= 0 and _line_index < lines.size():
 		cur_line = lines[_line_index]
 	var txt := str(cur_line.get("text", ""))
+	var preview_full := txt
 	if txt.length() > 42:
 		txt = txt.substr(0, 42) + "…"
 	var backlog_start := maxi(0, _backlog_entries.size() - 80)
 	var backlog_slice: Array = []
 	for i in range(backlog_start, _backlog_entries.size()):
 		backlog_slice.append(_backlog_entries[i])
+	var gm := _get_game_manager()
+	var flags_val: Variant = gm.call("export_flags")
+	var flags_copy: Dictionary = (flags_val as Dictionary).duplicate(true) if flags_val is Dictionary else {}
+	var loc_now := _location_label.text if (_location_label != null and not _location_label.text.is_empty()) else str(_current_scene.get("location", ""))
 	return {
+		"episode_id": _current_episode_id,
+		"episode_title": str(_current_episode.get("title", "")),
 		"scene_id": _current_scene_id,
 		"line_index": _line_index,
+		"line_idx": _line_index,
 		"chapter": str(_current_scene.get("chapter", "")),
 		"title": str(_current_scene.get("title", "")),
-		"location": str(_current_scene.get("location", "")),
+		"location": loc_now,
 		"speaker": str(cur_line.get("speaker", "")),
 		"excerpt": txt,
+		"preview_text": preview_full,
 		"at_choices": _at_choices or _choice_overlay.visible,
 		"backlog": backlog_slice,
-		"session_flags": _get_game_manager().call("export_flags"),
+		"flags": flags_copy,
+		"session_flags": flags_copy.duplicate(true),
 		"saved_at": Time.get_datetime_string_from_system(false, true),
 		"saved_unix": Time.get_unix_time_from_system(),
 	}
@@ -3112,17 +3173,33 @@ func _quick_load() -> void:
 func _on_qol_save_slot(slot_id: String) -> void:
 	if not _in_game:
 		return
-	_save_store.write_slot(slot_id, _build_save_snapshot())
+	var snap := _build_save_snapshot()
+	_save_store.write_slot(slot_id, snap)
+	if slot_id == "1" or slot_id == "2" or slot_id == "3":
+		_get_game_manager().call("save_slot", int(slot_id), snap)
 	_play_sm_se("ui_confirm", 0.80)
 	_qol_overlays.refresh_save_overlay_if_open()
 	_qol_overlays.show_toast("%s に記録しました" % str(SaveStore.SLOT_LABELS.get(slot_id, slot_id)))
 
 
 func _on_qol_load_slot(slot_id: String) -> void:
+	var gm := _get_game_manager()
 	var data := _save_store.get_slot(slot_id)
+	if data.is_empty() and (slot_id == "1" or slot_id == "2" or slot_id == "3"):
+		var gm_slot: Variant = gm.call("get_slot", int(slot_id))
+		if gm_slot is Dictionary:
+			data = gm_slot as Dictionary
 	if data.is_empty():
 		_qol_overlays.show_toast("記録データが見つかりません", true)
 		return
+
+	var saved_ep_id := str(data.get("episode_id", ""))
+	if not saved_ep_id.is_empty() and saved_ep_id != _current_episode_id:
+		var ep_info_val: Variant = gm.call("find_episode_by_id", saved_ep_id)
+		if not (ep_info_val is Dictionary) or (ep_info_val as Dictionary).is_empty() or not _load_episode_data(ep_info_val as Dictionary):
+			_qol_overlays.show_toast("対象作品のシナリオが見つかりません", true)
+			return
+
 	var scene_id := str(data.get("scene_id", ""))
 	if not _scenes.has(scene_id):
 		_qol_overlays.show_toast("保存先の章が見つかりません", true)
@@ -3134,22 +3211,57 @@ func _on_qol_load_slot(slot_id: String) -> void:
 	if saved_backlog is Array:
 		for item in saved_backlog:
 			if item is Dictionary:
-				_backlog_entries.append((item as Dictionary).duplicate(true))
+				var raw_entry := item as Dictionary
+				_backlog_entries.append({
+					"chapter": str(raw_entry.get("chapter", "")),
+					"title": str(raw_entry.get("title", "")),
+					"speaker": str(raw_entry.get("speaker", "")),
+					"text": str(raw_entry.get("text", "")),
+				})
 
-	_get_game_manager().call("import_flags", data.get("session_flags", {}))
-	var target_line := int(data.get("line_index", 0))
+	var saved_flags: Variant = data.get("session_flags", data.get("flags", {}))
+	gm.call("import_flags", saved_flags)
+	var target_line := int(data.get("line_index", data.get("line_idx", 0)))
 	var restore_choices := bool(data.get("at_choices", false))
-	_enter_scene(scene_id, false, target_line, restore_choices)
+	var append_first_backlog := _backlog_entries.is_empty()
+	_enter_scene(scene_id, false, target_line, restore_choices, append_first_backlog)
 	_qol_overlays.show_toast("%s から再開しました" % str(SaveStore.SLOT_LABELS.get(slot_id, slot_id)))
 
 
 func _on_qol_delete_slot(slot_id: String) -> void:
 	_play_ui_click()
 	_save_store.delete_slot(slot_id)
+	if slot_id == "1" or slot_id == "2" or slot_id == "3":
+		_get_game_manager().call("delete_slot", int(slot_id))
 	_qol_overlays.refresh_save_overlay_if_open()
 	if not _in_game:
 		_refresh_title_menu()
+		if _portal_screen != null and _portal_screen.visible and not _qol_overlays.is_any_open():
+			_refresh_portal_cards()
 	_qol_overlays.show_toast("%s を消去しました" % str(SaveStore.SLOT_LABELS.get(slot_id, slot_id)))
+
+
+func _on_qol_reset_all_save() -> void:
+	_play_sm_se("ui_confirm", 0.85)
+	_stop_voice_safe()
+	_save_store.reset_all_save_data(false)
+	_get_game_manager().call("reset_all_save_data")
+	_save_store.set_active_episode(_current_episode_id if not _current_episode_id.is_empty() else SaveStore.DEFAULT_EPISODE_ID)
+	_unlocked_endings = _save_store.unlocked_endings
+	_backlog_entries.clear()
+
+	if _in_game:
+		_show_title_screen()
+	else:
+		_refresh_title_menu()
+		if _portal_screen != null and _portal_screen.visible and not _qol_overlays.is_any_open():
+			_refresh_portal_cards()
+		if _gallery_overlay.visible:
+			_open_gallery(_opened_gallery_from_portal)
+		_qol_overlays.refresh_save_overlay_if_open()
+		_qol_overlays.refresh_chapter_overlay_if_open()
+
+	_qol_overlays.show_toast("セーブデータを初期化しました")
 
 
 func _on_qol_chapter_selected(scene_id: String) -> void:
@@ -3175,6 +3287,8 @@ func _on_qol_overlay_closed(kind: String) -> void:
 	if _main_title_screen != null and _main_title_screen.visible:
 		if kind == "settings" and _main_settings_btn != null:
 			_focus_control(_main_settings_btn)
+		elif kind == "save" and _main_continue_btn != null:
+			_focus_control(_main_continue_btn)
 		elif _main_series_btn != null:
 			_focus_control(_main_series_btn)
 		return
@@ -3590,7 +3704,8 @@ func _get_bgm_base_db() -> float:
 func _apply_live_audio_volumes() -> void:
 	var sm := _get_sound_manager()
 	if sm != null:
-		sm.call("set_volumes", 0.85, clampf(float(_save_store.settings.get("se_volume", 0.90)), 0.0, 1.0))
+		var se_vol := clampf(float(_save_store.settings.get("se_volume", 0.90)), 0.0, 1.0)
+		sm.call("set_volumes", 0.85, se_vol, 0.16 * se_vol)
 
 	if _current_bgm_id.is_empty() or _current_bgm_id == "silence":
 		return

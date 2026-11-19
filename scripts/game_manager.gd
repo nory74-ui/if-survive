@@ -3,6 +3,8 @@ extends Node
 
 const CATALOG_PATH := "res://episodes/catalog.json"
 const SAVE_PATH := "user://if_survive_save.json"
+const SLOTS_PATH := "user://if_survive_slots.json"
+const MAX_SAVE_SLOTS := 3
 
 var catalog_data: Dictionary = {}
 var current_episode: Dictionary = {}
@@ -10,11 +12,13 @@ var current_episode_id: String = ""
 var current_scenario: Dictionary = {}
 var unlocked_endings: Dictionary = {}
 var session_flags: Dictionary = {} # 1周プレイ中の伏線フラグ管理
+var save_slots: Dictionary = {}    # 3スロット途中保存データ { "1": {...}, "2": {...}, "3": {...} }
 
 
 func _ready() -> void:
 	load_catalog()
 	load_save_data()
+	load_slots()
 
 
 func load_catalog() -> void:
@@ -40,6 +44,10 @@ func get_episode_info(episode_id: String) -> Dictionary:
 		if str(ep.get("id", "")) == episode_id:
 			return ep
 	return {}
+
+
+func find_episode_by_id(ep_id: String) -> Dictionary:
+	return get_episode_info(ep_id)
 
 
 func load_episode(episode_info: Dictionary) -> bool:
@@ -180,9 +188,73 @@ func save_data() -> void:
 
 
 func load_save_data() -> void:
+	unlocked_endings.clear()
 	var parsed: Variant = _read_json_file(SAVE_PATH)
 	if parsed is Dictionary:
 		unlocked_endings = parsed as Dictionary
+
+
+# --- 途中セーブ・ロード（3スロット）＆初期化管理 ---
+
+func save_slot(slot_index: int, payload: Dictionary) -> void:
+	var dt := Time.get_datetime_dict_from_system()
+	var timestamp := "%04d/%02d/%02d %02d:%02d" % [
+		int(dt["year"]), int(dt["month"]), int(dt["day"]), int(dt["hour"]), int(dt["minute"])
+	]
+	var record := payload.duplicate(true)
+	record["timestamp"] = timestamp
+	record["flags"] = session_flags.duplicate(true)
+	save_slots[str(slot_index)] = record
+	_write_slots_file()
+
+
+func get_slot(slot_index: int) -> Dictionary:
+	var key := str(slot_index)
+	if save_slots.has(key) and save_slots[key] is Dictionary:
+		return save_slots[key] as Dictionary
+	return {}
+
+
+func delete_slot(slot_index: int) -> void:
+	var key := str(slot_index)
+	if save_slots.has(key):
+		save_slots.erase(key)
+		_write_slots_file()
+
+
+func has_any_slot() -> bool:
+	return not save_slots.is_empty()
+
+
+func load_slots() -> void:
+	save_slots.clear()
+	var parsed: Variant = _read_json_file(SLOTS_PATH)
+	if parsed is Dictionary:
+		save_slots = parsed as Dictionary
+
+
+func _write_slots_file() -> void:
+	var file := FileAccess.open(SLOTS_PATH, FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(save_slots, "\t"))
+
+
+func reset_all_save_data() -> void:
+	unlocked_endings.clear()
+	save_slots.clear()
+	session_flags.clear()
+	_remove_or_clear_json_file(SAVE_PATH)
+	_remove_or_clear_json_file(SLOTS_PATH)
+
+
+func _remove_or_clear_json_file(path: String) -> void:
+	if not FileAccess.file_exists(path):
+		return
+	var err := DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	if err != OK or FileAccess.file_exists(path):
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		if file != null:
+			file.store_string("{}")
 
 
 func _read_json_file(path: String) -> Variant:

@@ -292,6 +292,33 @@ func get_total_unlocked_endings() -> int:
 	return total
 
 
+func get_total_saved_slots() -> int:
+	_sync_active_bucket()
+	var total := 0
+	for ep_k in _episodes_state.keys():
+		var bucket: Variant = _episodes_state[ep_k]
+		if bucket is Dictionary:
+			var sl: Variant = (bucket as Dictionary).get("slots", {})
+			if sl is Dictionary:
+				for sid in SLOT_IDS:
+					var item: Variant = (sl as Dictionary).get(sid, null)
+					if item is Dictionary and not (item as Dictionary).is_empty():
+						total += 1
+	return total
+
+
+func get_total_visited_scenes() -> int:
+	_sync_active_bucket()
+	var total := 0
+	for ep_k in _episodes_state.keys():
+		var bucket: Variant = _episodes_state[ep_k]
+		if bucket is Dictionary:
+			var vs: Variant = (bucket as Dictionary).get("visited_scenes", {})
+			if vs is Dictionary:
+				total += (vs as Dictionary).size()
+	return total
+
+
 func mark_scene_visited(scene_id: String) -> void:
 	if scene_id.is_empty():
 		return
@@ -337,6 +364,34 @@ func delete_slot(slot_id: String) -> void:
 	if slots.has(slot_id):
 		slots.erase(slot_id)
 		save_to_disk()
+
+
+func clear_all_slots(episode_id: String = "") -> void:
+	_sync_active_bucket()
+	if episode_id.is_empty():
+		for ep_k in _episodes_state.keys():
+			var bucket: Variant = _episodes_state[ep_k]
+			if bucket is Dictionary:
+				(bucket as Dictionary)["slots"] = {}
+		slots.clear()
+	else:
+		var bucket := _ensure_bucket(episode_id)
+		bucket["slots"] = {}
+		if episode_id == _active_episode_id:
+			slots.clear()
+	save_to_disk()
+
+
+func reset_all_save_data(reset_settings: bool = false) -> void:
+	_episodes_state.clear()
+	unlocked_endings.clear()
+	visited_scenes.clear()
+	visited_lines.clear()
+	slots.clear()
+	if reset_settings:
+		reset_settings_to_default(false)
+	_load_active_bucket(_active_episode_id)
+	save_to_disk()
 
 
 func get_slot(slot_id: String) -> Dictionary:

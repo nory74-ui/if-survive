@@ -9,6 +9,7 @@ signal delete_slot_requested(slot_id: String)
 signal chapter_selected(scene_id: String)
 signal settings_changed()
 signal test_se_requested()
+signal reset_all_save_requested()
 signal overlay_closed(kind: String)
 
 const COLOR_SUMI := Color(0.0941, 0.0941, 0.1216, 0.96)
@@ -30,6 +31,7 @@ var _save_title_lbl: Label
 var _tab_save_btn: Button
 var _tab_load_btn: Button
 var _save_list: VBoxContainer
+var _save_reset_btn: Button
 var _save_close_btn: Button
 
 # Chapter Select overlay
@@ -48,8 +50,15 @@ var _se_pct_lbl: Label
 var _text_speed_btns: Array[Button] = []
 var _auto_speed_btns: Array[Button] = []
 var _skip_mode_btns: Array[Button] = []
+var _settings_save_reset_btn: Button
 var _settings_reset_btn: Button
 var _settings_close_btn: Button
+
+# Reset Confirm overlay
+var _reset_confirm_overlay: Control
+var _reset_summary_lbl: Label
+var _reset_cancel_btn: Button
+var _reset_execute_btn: Button
 
 # Toast banner
 var _toast_panel: PanelContainer
@@ -66,6 +75,7 @@ func setup(store: SaveStore, scenes_ref: Dictionary, episode_id: String = SaveSt
 	_build_save_overlay()
 	_build_chapter_overlay()
 	_build_settings_overlay()
+	_build_reset_confirm_overlay()
 	_build_toast_banner()
 
 
@@ -76,10 +86,13 @@ func set_scenes(scenes_ref: Dictionary, episode_id: String = "") -> void:
 
 
 func is_any_open() -> bool:
-	return _save_overlay.visible or _chapter_overlay.visible or _settings_overlay.visible
+	return _save_overlay.visible or _chapter_overlay.visible or _settings_overlay.visible or _reset_confirm_overlay.visible
 
 
 func close_top_overlay() -> bool:
+	if _reset_confirm_overlay.visible:
+		close_reset_confirm()
+		return true
 	if _settings_overlay.visible:
 		close_settings()
 		return true
@@ -120,6 +133,8 @@ func open_save_load(can_save_now: bool, start_write_mode: bool = false) -> void:
 
 
 func close_save_load() -> void:
+	if _reset_confirm_overlay != null and _reset_confirm_overlay.visible:
+		_reset_confirm_overlay.visible = false
 	if not _save_overlay.visible:
 		return
 	_save_overlay.visible = false
@@ -129,6 +144,11 @@ func close_save_load() -> void:
 func refresh_save_overlay_if_open() -> void:
 	if _save_overlay.visible:
 		_refresh_save_overlay()
+
+
+func refresh_chapter_overlay_if_open() -> void:
+	if _chapter_overlay.visible:
+		_refresh_chapter_overlay()
 
 
 func open_chapter_select() -> void:
@@ -154,6 +174,8 @@ func open_settings() -> void:
 
 
 func close_settings() -> void:
+	if _reset_confirm_overlay != null and _reset_confirm_overlay.visible:
+		_reset_confirm_overlay.visible = false
 	if not _settings_overlay.visible:
 		return
 	_settings_overlay.visible = false
@@ -213,6 +235,25 @@ func _build_save_overlay() -> void:
 	_save_list.add_theme_constant_override("separation", 16)
 	vbox.add_child(_save_list)
 
+	var save_footer := HBoxContainer.new()
+	save_footer.add_theme_constant_override("separation", 16)
+	vbox.add_child(save_footer)
+
+	var save_hint_lbl := Label.new()
+	save_hint_lbl.text = "※ 各栞には伏線フラグ（分岐印）と履歴も同時に記録されます"
+	save_hint_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	save_hint_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	save_hint_lbl.add_theme_color_override("font_color", COLOR_MUTED)
+	save_hint_lbl.add_theme_font_size_override("font_size", 18)
+	save_footer.add_child(save_hint_lbl)
+
+	_save_reset_btn = Button.new()
+	_save_reset_btn.text = "セーブデータ初期化"
+	_save_reset_btn.custom_minimum_size = Vector2(260, 52)
+	_apply_danger_button_style(_save_reset_btn)
+	_save_reset_btn.pressed.connect(open_reset_confirm)
+	save_footer.add_child(_save_reset_btn)
+
 
 func _refresh_save_overlay() -> void:
 	_apply_toggle_style(_tab_save_btn, _save_mode_write)
@@ -260,9 +301,14 @@ func _create_slot_row(slot_id: String) -> PanelContainer:
 
 	if has_data:
 		var ch := str(data.get("chapter", ""))
-		var st := str(data.get("title", ""))
+		var st := str(data.get("title", data.get("episode_title", "")))
 		var chap_lbl := Label.new()
-		chap_lbl.text = "%s　%s" % [ch, st] if not ch.is_empty() else st
+		if not ch.is_empty() and not st.is_empty():
+			chap_lbl.text = "%s　%s" % [ch, st]
+		elif not ch.is_empty():
+			chap_lbl.text = ch
+		else:
+			chap_lbl.text = st
 		chap_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		chap_lbl.add_theme_color_override("font_color", COLOR_PAPER)
 		chap_lbl.add_theme_font_size_override("font_size", 24)
@@ -275,14 +321,21 @@ func _create_slot_row(slot_id: String) -> PanelContainer:
 			ch_badge.add_theme_font_size_override("font_size", 21)
 			top_line.add_child(ch_badge)
 
+		var flag_count := _count_active_flags(data.get("session_flags", data.get("flags", {})))
+		var flag_lbl := Label.new()
+		flag_lbl.text = "（分岐印：%d）" % flag_count
+		flag_lbl.add_theme_color_override("font_color", COLOR_GOLD if flag_count > 0 else COLOR_MUTED)
+		flag_lbl.add_theme_font_size_override("font_size", 20)
+		top_line.add_child(flag_lbl)
+
 		var time_lbl := Label.new()
-		time_lbl.text = str(data.get("saved_at", ""))
+		time_lbl.text = str(data.get("saved_at", data.get("timestamp", "")))
 		time_lbl.add_theme_color_override("font_color", COLOR_MUTED)
 		time_lbl.add_theme_font_size_override("font_size", 20)
 		top_line.add_child(time_lbl)
 
 		var spk := str(data.get("speaker", ""))
-		var exc := str(data.get("excerpt", ""))
+		var exc := str(data.get("excerpt", data.get("preview_text", "")))
 		var text_line := Label.new()
 		text_line.text = ("【%s】%s" % [spk, exc]) if not spk.is_empty() else exc
 		text_line.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -608,9 +661,20 @@ func _build_settings_overlay() -> void:
 	help_panel.add_child(help_lbl)
 
 	var footer := HBoxContainer.new()
-	footer.alignment = BoxContainer.ALIGNMENT_END
 	footer.add_theme_constant_override("separation", 18)
 	vbox.add_child(footer)
+
+	_settings_save_reset_btn = Button.new()
+	_settings_save_reset_btn.text = "セーブデータ初期化"
+	_settings_save_reset_btn.custom_minimum_size = Vector2(280, 58)
+	_apply_danger_button_style(_settings_save_reset_btn)
+	_settings_save_reset_btn.pressed.connect(open_reset_confirm)
+	footer.add_child(_settings_save_reset_btn)
+
+	var footer_spacer := Control.new()
+	footer_spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	footer_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	footer.add_child(footer_spacer)
 
 	_settings_reset_btn = Button.new()
 	_settings_reset_btn.text = "初期設定に戻す"
@@ -646,6 +710,112 @@ func _sync_settings_ui() -> void:
 	var su_idx := 1 if bool(_store.settings.get("skip_unread", false)) else 0
 	for i in _skip_mode_btns.size():
 		_apply_toggle_style(_skip_mode_btns[i], i == su_idx)
+
+
+func _build_reset_confirm_overlay() -> void:
+	var shell := _create_modal_shell("ResetConfirmOverlay", Vector2(920, 420), close_reset_confirm)
+	_reset_confirm_overlay = shell["root"]
+	var vbox: VBoxContainer = shell["vbox"]
+	add_child(_reset_confirm_overlay)
+
+	var title_lbl := Label.new()
+	title_lbl.text = "◆ セーブデータの初期化"
+	title_lbl.add_theme_color_override("font_color", COLOR_CRIMSON.lightened(0.35))
+	title_lbl.add_theme_font_size_override("font_size", 34)
+	vbox.add_child(title_lbl)
+
+	vbox.add_child(_make_gold_line())
+
+	var warn_lbl := Label.new()
+	warn_lbl.text = (
+		"すべてのセーブデータ（急速の栞・記録帳 壱〜参）、既読履歴、\n"
+		+ "歴史年表の解放状況、終幕録の達成記録を完全に消去します。\n\n"
+		+ "環境設定（音量・文字速度など）は維持されます。\n"
+		+ "この操作は取り消せません。本当に初期化しますか？"
+	)
+	warn_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	warn_lbl.add_theme_color_override("font_color", COLOR_PAPER)
+	warn_lbl.add_theme_font_size_override("font_size", 23)
+	vbox.add_child(warn_lbl)
+
+	_reset_summary_lbl = Label.new()
+	_reset_summary_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_reset_summary_lbl.add_theme_color_override("font_color", COLOR_GOLD)
+	_reset_summary_lbl.add_theme_font_size_override("font_size", 21)
+	vbox.add_child(_reset_summary_lbl)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_row.add_theme_constant_override("separation", 32)
+	vbox.add_child(btn_row)
+
+	_reset_cancel_btn = Button.new()
+	_reset_cancel_btn.text = "キャンセル"
+	_reset_cancel_btn.custom_minimum_size = Vector2(240, 62)
+	_reset_cancel_btn.pressed.connect(close_reset_confirm)
+	btn_row.add_child(_reset_cancel_btn)
+
+	_reset_execute_btn = Button.new()
+	_reset_execute_btn.text = "初期化する"
+	_reset_execute_btn.custom_minimum_size = Vector2(260, 62)
+	_apply_danger_button_style(_reset_execute_btn)
+	_reset_execute_btn.pressed.connect(func() -> void:
+		_reset_confirm_overlay.visible = false
+		reset_all_save_requested.emit()
+		if _save_overlay.visible:
+			_refresh_save_overlay()
+			_focus_target(_save_close_btn)
+		elif _settings_overlay.visible:
+			_focus_target(_settings_close_btn)
+		if _chapter_overlay.visible:
+			_refresh_chapter_overlay()
+	)
+	btn_row.add_child(_reset_execute_btn)
+
+
+func open_reset_confirm() -> void:
+	if _store != null:
+		var slot_cnt := _store.get_total_saved_slots()
+		var vis_cnt := _store.get_total_visited_scenes()
+		var end_cnt := _store.get_total_unlocked_endings()
+		_reset_summary_lbl.text = "現在の記録 ― 栞：%d件　|　既読章：%d　|　達成終幕：%d" % [slot_cnt, vis_cnt, end_cnt]
+	else:
+		_reset_summary_lbl.text = ""
+	_reset_confirm_overlay.visible = true
+	_focus_target(_reset_cancel_btn)
+
+
+func close_reset_confirm() -> void:
+	if _reset_confirm_overlay == null or not _reset_confirm_overlay.visible:
+		return
+	_reset_confirm_overlay.visible = false
+	if _settings_overlay.visible:
+		_focus_target(_settings_close_btn)
+	elif _save_overlay.visible:
+		_focus_target(_save_close_btn)
+
+
+func _count_active_flags(raw_flags: Variant) -> int:
+	if not (raw_flags is Dictionary):
+		return 0
+	var cnt := 0
+	var d := raw_flags as Dictionary
+	for k in d.keys():
+		if bool(d[k]):
+			cnt += 1
+	return cnt
+
+
+func _apply_danger_button_style(btn: Button) -> void:
+	var norm_border := Color(COLOR_CRIMSON.r, COLOR_CRIMSON.g, COLOR_CRIMSON.b, 0.92)
+	var sb_norm := _make_box(Color(0.18, 0.055, 0.065, 0.94), norm_border, 1, 20, 10)
+	var sb_hi := _make_box(Color(0.32, 0.075, 0.085, 0.96), COLOR_GOLD, 1, 20, 10)
+	var sb_prs := _make_box(COLOR_CRIMSON, COLOR_GOLD, 2, 20, 10)
+	btn.add_theme_stylebox_override("normal", sb_norm)
+	btn.add_theme_stylebox_override("hover", sb_hi)
+	btn.add_theme_stylebox_override("focus", sb_hi)
+	btn.add_theme_stylebox_override("pressed", sb_prs)
+	btn.add_theme_color_override("font_color", COLOR_PAPER)
 
 
 func _build_toast_banner() -> void:

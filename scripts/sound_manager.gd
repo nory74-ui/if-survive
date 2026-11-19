@@ -12,7 +12,7 @@ const WEB_AMBIENT_SEC := 2.5
 
 var master_volume: float = 0.85
 var se_volume: float = 0.90
-var ambient_volume: float = 0.45
+var ambient_volume: float = 0.16
 var voice_volume: float = 1.0
 var muted: bool = false
 
@@ -41,6 +41,7 @@ var _pink_b0: float = 0.0
 var _pink_b1: float = 0.0
 var _pink_b2: float = 0.0
 var _lp_state: float = 0.0
+var _lp_state2: float = 0.0
 var _ambient_phase: float = 0.0
 var _droplet_timer: float = 0.0
 var _droplet_freq: float = 1800.0
@@ -186,7 +187,7 @@ func play_se(se_key: String, volume_scale: float = 1.0) -> void:
 
 func set_ambient(ambient_type: String) -> void:
 	match ambient_type:
-		"rain", "embers", "ocean", "ocean_waves":
+		"rain", "ocean", "ocean_waves":
 			var target_name := "ocean" if ambient_type == "ocean_waves" else ambient_type
 			if _current_ambient != target_name:
 				_ambient_phase = 0.0
@@ -194,6 +195,7 @@ func set_ambient(ambient_type: String) -> void:
 				_pink_b1 = 0.0
 				_pink_b2 = 0.0
 				_lp_state = 0.0
+				_lp_state2 = 0.0
 			_current_ambient = target_name
 			_ambient_target_gain = 1.0
 		_:
@@ -285,30 +287,24 @@ func _sample_ambient() -> Vector2:
 			_pink_b0 = 0.99765 * _pink_b0 + white * 0.0990460
 			_pink_b1 = 0.96300 * _pink_b1 + white * 0.2965164
 			_pink_b2 = 0.57000 * _pink_b2 + white * 1.0526913
-			var pink := (_pink_b0 + _pink_b1 + _pink_b2 + white * 0.1848) * 0.08
+			var pink := (_pink_b0 + _pink_b1 + _pink_b2 + white * 0.1848) * 0.06
+			_lp_state = _lp_state * 0.78 + pink * 0.22
 
 			_droplet_timer -= 1.0 / SAMPLE_RATE
 			if _droplet_timer <= 0.0:
-				_droplet_timer = randf_range(0.06, 0.35)
-				_droplet_freq = randf_range(1400.0, 3200.0)
-				_droplet_env = randf_range(0.03, 0.09)
+				_droplet_timer = randf_range(0.08, 0.42)
+				_droplet_freq = randf_range(1100.0, 2400.0)
+				_droplet_env = randf_range(0.018, 0.055)
 			var drop := sin(TAU * _droplet_freq * _ambient_phase) * _droplet_env
 			_droplet_env *= 0.996
 
-			return Vector2(pink + drop, pink * 0.95 - drop * 0.7)
-
-		"embers":
-			_lp_state = _lp_state * 0.97 + white * 0.03
-			var rumble := _lp_state * 1.4
-			var crackle := 0.0
-			if randf() < 0.0012:
-				crackle = randf_range(-0.45, 0.45)
-			return Vector2(rumble + crackle, rumble + crackle * 0.6)
+			return Vector2(_lp_state + drop, _lp_state * 0.95 - drop * 0.7)
 
 		"ocean":
-			_lp_state = _lp_state * 0.95 + white * 0.05
-			var wave_mod := 0.4 + 0.6 * (0.5 + 0.5 * sin(_ambient_phase * 0.85))
-			var s := _lp_state * 1.1 * wave_mod
+			_lp_state = _lp_state * 0.96 + white * 0.04
+			_lp_state2 = _lp_state2 * 0.96 + _lp_state * 0.04
+			var wave_mod := 0.35 + 0.65 * (0.5 + 0.5 * sin(_ambient_phase * 0.85))
+			var s := _lp_state2 * 2.2 * wave_mod
 			return Vector2(s, s * 0.92)
 
 	return Vector2.ZERO
@@ -363,6 +359,7 @@ func _get_or_build_web_ambient_wav(amb_type: String) -> AudioStreamWAV:
 	_pink_b1 = 0.0
 	_pink_b2 = 0.0
 	_lp_state = 0.0
+	_lp_state2 = 0.0
 	for i in range(count):
 		var s := _sample_ambient()
 		# ループ境界のクリック音を抑えるため先頭・末尾をわずかにクロスフェード
